@@ -1,0 +1,16 @@
+# Cloudflare Pages headers (https://developers.cloudflare.com/pages/configuration/headers/)
+
+# Vite fingerprints everything under /assets, so it can be cached forever
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Animations and brand files are not fingerprinted; revalidate daily
+/animations/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/brand/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
