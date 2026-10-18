@@ -26,6 +26,7 @@ function page(name: string): Page {
 /** Route table. Trailing slashes match the main thediadem.ca site. Order matters: first match wins. */
 export const routes = [
   { path: '/', ...page('Home') },
+  { path: '/about/', ...page('About') },
   { path: '/apply/', ...page('Apply') },
   { path: '*', ...page('NotFound') },
 ]

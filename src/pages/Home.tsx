@@ -1,5 +1,5 @@
 import Seo from '../components/Seo'
-import Advantage from '../components/sections/Advantage'
+import Benefits from '../components/sections/Benefits'
 import Disc from '../components/sections/Disc'
 import FinalCta from '../components/sections/FinalCta'
 import Hero from '../components/sections/Hero'
@@ -43,9 +43,9 @@ export default function Home() {
       <Hero />
       <Disc />
       <Problem />
+      <Benefits />
       <Solution />
       <Process />
-      <Advantage />
       <Pricing />
       <Who />
       <Testimonials />

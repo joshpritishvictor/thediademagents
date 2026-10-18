@@ -7,7 +7,6 @@ export default function Testimonials() {
     <section className="border-t border-ink/10 bg-surface section-y">
       <div className="container-page">
         <SectionHeading
-          index="08"
           eyebrow={testimonials.eyebrow}
           title={[testimonials.heading[0], testimonials.heading[1]]}
           align="center"

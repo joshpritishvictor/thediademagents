@@ -33,7 +33,7 @@ export const site = {
   tagline: read('VITE_TAGLINE', 'Your Financial Ecosystem, Unified'),
   description: read(
     'VITE_SITE_DESCRIPTION',
-    `${shortName} handles the marketing, qualification and meeting coordination for Alberta insurance advisors, and places an independent CPA at every client meeting. Spend less time prospecting and more time advising.`,
+    `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objection that kills most files never comes up.`,
   ),
   /** Canonical origin of this site, used for canonical links, Open Graph and the sitemap */
   url: trimSlash(read('VITE_SITE_URL', 'https://advisors.thediadem.ca')),
@@ -56,13 +56,12 @@ export const site = {
   },
 }
 
-/** In-page sections on the home page, in order */
+/** Main navigation: the home page sections in order, then the other pages */
 export const navLinks = [
   { to: '/#disc', label: 'D.I.S.C.' },
-  { to: '/#how-it-works', label: 'How It Works' },
-  { to: '/#advantage', label: 'The Advantage' },
   { to: '/#services', label: 'Services' },
   { to: '/#who', label: 'Who Thrives' },
+  { to: '/about/', label: 'About Us' },
 ]
 
 export const applyLink = { to: '/apply/', label: 'Apply as an Advisor' }
@@ -72,7 +71,6 @@ export const cta = {
   apply: 'Apply as an Advisor',
   applyPremium: `Apply as a ${shortName} Premium Advisor`,
   exploreFlex: `Explore ${shortName} Flex`,
-  howItWorks: 'See How It Works',
   introCall: 'Schedule a 20-Minute Introduction Call',
 }
 

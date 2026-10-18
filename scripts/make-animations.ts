@@ -4,6 +4,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { loadEnv } from 'vite'
+import { DISC_FLOW, discFlowArrivalFrame } from '../src/lib/discFlow.ts'
 import { resolvePalette } from '../src/theme/palette.ts'
 
 const outDir = path.resolve(import.meta.dirname, '..', 'public', 'animations')
@@ -247,16 +248,16 @@ const loopFade = (op: number, from: number, extra: [number, number][] = []) =>
 
 const centre = (w: number, h: number) => val([w / 2, h / 2, 0])
 
-// ---- 1. One table: four professions converge around the Diadem crown -------
-// Hero illustration on a dark background. 30 s loop with a 2 s intro.
+// ---- 1. One table: the table pops in and pulses behind the Diadem crown -----
+// Hero illustration on a dark background. 30 s loop with a short intro. The
+// four professions are listed in a card beside it (see Hero.tsx).
 
 function oneTable() {
   const W = 400
   const OP = 1800
-  const R_SEATS = 140
   const layers: LayerOpts[] = []
 
-  // The centre of the table is left clear: the site overlays the real logo mark there (see Hero.tsx)
+  // The table fills most of the frame; its centre is left clear because the site overlays the real logo mark there (see Hero.tsx)
 
   // Pulse rings radiating from the table every 1.5 s
   for (const delay of [0, 45]) {
@@ -264,7 +265,7 @@ function oneTable() {
     const ofr: [number, number][] = []
     for (let t = 130 + delay; t + 90 <= OP; t += 90) {
       frames.push({ t, v: [100, 100, 100], e: EASE.out })
-      frames.push({ t: t + 89, v: [150, 150, 100], e: EASE.linear })
+      frames.push({ t: t + 89, v: [115, 115, 100], e: EASE.linear })
       ofr.push([t, 50], [t + 89, 0])
     }
     layers.push({
@@ -272,7 +273,7 @@ function oneTable() {
       p: centre(W, W),
       s: anim(frames),
       o: opacity([[0, 0], [129 + delay, 0], ...ofr, [OP, 0]], EASE.linear),
-      shapes: [group('ring', [ellipse(0, 0, 190), stroke(C.gold, 2)])],
+      shapes: [group('ring', [ellipse(0, 0, 336), stroke(C.gold, 2)])],
     })
   }
 
@@ -286,99 +287,42 @@ function oneTable() {
       { t: 50, v: [100, 100, 100] },
     ]),
     shapes: [
-      group('top', [ellipse(0, 0, 190), fill(C.raised), stroke(C.gold, 3)]),
-      group('inner', [ellipse(0, 0, 150), stroke(C.gold, 1, val(35))]),
+      group('top', [ellipse(0, 0, 336), fill(C.raised), stroke(C.gold, 3)]),
+      group('inner', [ellipse(0, 0, 264), stroke(C.gold, 1, val(35))]),
     ],
-  })
-
-  // Four seats fly in from outside the frame
-  const seatAngles = [-90, 0, 90, 180]
-  seatAngles.forEach((deg, i) => {
-    const rad = (deg * Math.PI) / 180
-    const at = (r: number) => [
-      W / 2 + Math.cos(rad) * r,
-      W / 2 + Math.sin(rad) * r,
-      0,
-    ]
-    const start = 20 + i * 9
-    layers.push({
-      name: `seat-${i}`,
-      p: anim([
-        { t: start, v: at(R_SEATS + 150), e: EASE.out },
-        { t: start + 55, v: at(R_SEATS) },
-      ]),
-      o: loopFade(OP, OP - 40, [
-        [start, 0],
-        [start + 14, 100],
-      ]),
-      r: val(deg + 90),
-      shapes: [
-        group('chair', [
-          rect(0, 0, 46, 46, 15),
-          fill(C.raised),
-          stroke(C.gold, 2),
-        ]),
-        group('person-body', [rect(0, 7, 24, 14, 7), fill(C.light)]),
-        group('person-head', [ellipse(0, -7, 15), fill(C.light)]),
-      ],
-    })
-  })
-
-  // Dashed orbit linking the seats: draws in, then its dashes keep circulating
-  layers.push({
-    name: 'orbit',
-    p: centre(W, W),
-    o: loopFade(OP, OP - 40, [
-      [70, 0],
-      [90, 100],
-    ]),
-    shapes: [
-      group('orbit', [
-        ellipse(0, 0, R_SEATS * 2),
-        trim(70, 140),
-        stroke(C.gold300, 2, val(70), { on: 6, off: 9, speed: 0.4, op: OP }),
-      ]),
-    ],
-  })
-
-  // Faint outer ring for depth
-  layers.push({
-    name: 'outer',
-    p: centre(W, W),
-    o: loopFade(OP, OP - 40, [
-      [0, 0],
-      [60, 100],
-    ]),
-    shapes: [group('outer', [ellipse(0, 0, 372), stroke(C.gold, 1, val(18))])],
   })
 
   return animation('Four professions, one table', W, W, OP, layers)
 }
 
 // ---- 2. D.I.S.C. flow: a pulse travels the pipeline, lighting each stage ----
-// Light background. 4 s loop.
+// Light background. Not a loop: four segments, one per stage (see
+// src/lib/discFlow.ts). The page plays the active stage's segment; the pulse
+// lands on the stage's circle as the segment starts and spends the rest of it
+// travelling on to the next, so it never stops moving between stages.
 
 function discFlow() {
   const W = 800
   const H = 160
-  const OP = 270
+  const { stageFrames: SEG, stages } = DISC_FLOW
+  const OP = SEG * stages
   const Y = H / 2
   const xs = [80, 293, 507, 720]
-  const STEP = 55
+  const hitAt = discFlowArrivalFrame
   const layers: LayerOpts[] = []
 
-  // Travelling pulse
+  // Travelling pulse: appears on the first stage, then glides at a steady pace
+  // from each circle to the next across that stage's whole segment, landing
+  // as the next segment starts. It dissolves into the last circle.
+  const last = xs.length - 1
   layers.push({
     name: 'pulse',
-    p: anim([
-      { t: 0, v: [xs[0], Y, 0], e: EASE.linear },
-      { t: STEP * 3, v: [xs[3], Y, 0] },
-    ]),
+    p: anim(xs.map((x, i) => ({ t: i * SEG, v: [x, Y, 0], e: EASE.linear }))),
     o: opacity([
       [0, 0],
-      [10, 100],
-      [STEP * 3 - 5, 100],
-      [STEP * 3 + 10, 0],
+      [8, 100],
+      [last * SEG + 20, 100],
+      [last * SEG + 40, 0],
     ]),
     shapes: [
       group('glow', [ellipse(0, 0, 40), fill(C.gold, val(25))]),
@@ -386,13 +330,12 @@ function discFlow() {
     ],
   })
 
-  // Stage nodes light up as the pulse arrives
+  // Stage nodes light up as the pulse arrives and stay lit for the rest of the timeline
   xs.forEach((x, i) => {
-    const hit = STEP * i
+    const hit = hitAt(i)
     layers.push({
       name: `node-${i}`,
       p: val([x, Y, 0]),
-      o: loopFade(OP, OP - 25),
       s: anim([
         { t: hit, v: [100, 100, 100], e: EASE.overshoot },
         { t: hit + 20, v: [128, 128, 100], e: EASE.out },
@@ -432,24 +375,31 @@ function discFlow() {
     })
   })
 
-  // Line between the stages: gold draws in behind the pulse
+  // Line between the stages: gold draws in behind the pulse at its pace
+  const span = 100 / (xs.length - 1)
   layers.push({
     name: 'line-active',
-    o: loopFade(OP, OP - 25),
     shapes: [
       group('line', [
         polyline([
           [xs[0], Y],
           [xs[3], Y],
         ]),
-        trim(0, STEP * 3, EASE.linear),
+        {
+          ty: 'tm',
+          s: val(0),
+          e: anim(
+            xs.map((_, i) => ({ t: i * SEG, v: [span * i], e: EASE.linear })),
+          ),
+          o: val(0),
+          m: 1,
+        },
         stroke(C.gold, 4),
       ]),
     ],
   })
   layers.push({
     name: 'line-base',
-    o: loopFade(OP, OP - 25),
     shapes: [
       group('line', [
         polyline([
@@ -464,133 +414,7 @@ function discFlow() {
   return animation('D.I.S.C. flow', W, H, OP, layers)
 }
 
-// ---- 3. Objection answered: the "let me ask my accountant" bubble resolves --
-// Dark background. 5 s loop.
-
-function objectionCheck() {
-  const W = 400
-  const OP = 300
-  const layers: LayerOpts[] = []
-
-  // Burst of gold sparks when the check lands
-  for (let i = 0; i < 8; i++) {
-    const a = (i / 8) * Math.PI * 2
-    const from = 60
-    const to = 150
-    layers.push({
-      name: `spark-${i}`,
-      p: anim([
-        {
-          t: 165,
-          v: [W / 2 + Math.cos(a) * from, W / 2 - 20 + Math.sin(a) * from, 0],
-          e: EASE.out,
-        },
-        {
-          t: 215,
-          v: [W / 2 + Math.cos(a) * to, W / 2 - 20 + Math.sin(a) * to, 0],
-        },
-      ]),
-      o: opacity([
-        [160, 0],
-        [170, 100],
-        [215, 0],
-      ]),
-      s: anim([
-        { t: 165, v: [100, 100, 100], e: EASE.out },
-        { t: 215, v: [20, 20, 100] },
-      ]),
-      shapes: [
-        group('spark', [ellipse(0, 0, 10), fill(i % 2 ? C.gold : C.gold300)]),
-      ],
-    })
-  }
-
-  // Checkmark draws in once the dots give way
-  layers.push({
-    name: 'check',
-    p: val([W / 2, W / 2 - 20, 0]),
-    o: loopFade(OP, OP - 30, [
-      [128, 0],
-      [132, 100],
-    ]),
-    shapes: [
-      group('check', [
-        polyline([
-          [-52, -8],
-          [-14, 28],
-          [56, -38],
-        ]),
-        trim(132, 170, EASE.out),
-        stroke(C.gold, 14),
-      ]),
-    ],
-  })
-
-  // Typing dots: the client "thinking about it"
-  for (let i = 0; i < 3; i++) {
-    const x = W / 2 - 42 + i * 42
-    const blink: [number, number][] = []
-    for (let t = 34 + i * 8; t < 118; t += 36) {
-      blink.push([t, 35], [t + 18, 100])
-    }
-    layers.push({
-      name: `dot-${i}`,
-      p: val([x, W / 2 - 20, 0]),
-      o: opacity([
-        [0, 0],
-        [30 + i * 6, 0],
-        [36 + i * 6, 100],
-        ...blink,
-        [120, 100],
-        [130, 0],
-      ]),
-      shapes: [group('dot', [ellipse(0, 0, 20), fill(C.dark, val(45))])],
-    })
-  }
-
-  // Speech bubble pops in
-  layers.push({
-    name: 'bubble',
-    p: val([W / 2, W / 2 - 20, 0]),
-    o: loopFade(OP, OP - 30, [
-      [0, 0],
-      [6, 100],
-    ]),
-    s: anim([
-      { t: 0, v: [0, 0, 100], e: EASE.overshoot },
-      { t: 40, v: [100, 100, 100] },
-    ]),
-    shapes: [
-      group('bubble', [
-        rect(0, 0, 250, 160, 34),
-        polyline(
-          [
-            [-70, 70],
-            [-98, 112],
-            [-30, 78],
-          ],
-          true,
-        ),
-        fill(C.light),
-      ]),
-    ],
-  })
-
-  // Soft glow behind everything
-  layers.push({
-    name: 'glow',
-    p: val([W / 2, W / 2 - 20, 0]),
-    o: loopFade(OP, OP - 30, [
-      [0, 0],
-      [40, 100],
-    ]),
-    shapes: [group('glow', [ellipse(0, 0, 330, 260), fill(C.gold, val(10))])],
-  })
-
-  return animation('Objection answered', W, W, OP, layers)
-}
-
-// ---- 4. Growth: a pipeline that keeps building -----------------------------
+// ---- 3. Growth: a pipeline that keeps building -----------------------------
 // Dark background. 6 s loop.
 
 function growth() {
@@ -689,7 +513,6 @@ mkdirSync(outDir, { recursive: true })
 const files = {
   'one-table.json': oneTable(),
   'disc-flow.json': discFlow(),
-  'objection-check.json': objectionCheck(),
   'growth.json': growth(),
 }
 for (const [name, data] of Object.entries(files)) {

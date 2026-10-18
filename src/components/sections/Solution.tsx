@@ -8,12 +8,7 @@ export default function Solution() {
       <div className="container-page">
         <Reveal className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-4">
-              <span className="font-display text-sm text-gold-500 italic">
-                03
-              </span>
-              <p className="eyebrow">What we take off your plate</p>
-            </div>
+            <p className="eyebrow">What we take off your plate</p>
             <h2 className="mt-6 display-lg text-brand-950">
               {lead} <em className="accent">{accent}</em> {tail}
             </h2>

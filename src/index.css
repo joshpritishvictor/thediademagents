@@ -67,8 +67,23 @@
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
-    /* Anchor links land just below the fixed header */
-    scroll-padding-top: 5.5rem;
+    /*
+     * The fixed header's height (bar + hairline), so anchor links and section
+     * snapping land flush beneath it. These are the pre-render values; once
+     * the header mounts it measures itself and overrides them (Header.tsx).
+     */
+    --header-h: calc(4.25rem + 1px);
+    /*
+     * Sections tuck this far under the bar when snapped to or linked to, so a
+     * pixel or two of drift can never show a sliver of the previous section.
+     */
+    --snap-top: calc(var(--header-h) - 6px);
+    scroll-padding-top: var(--snap-top);
+  }
+  @media (min-width: 48rem) {
+    html {
+      --header-h: calc(4.5rem + 1px);
+    }
   }
   body {
     @apply bg-surface font-sans text-[1.0625rem] leading-relaxed text-ink;
@@ -126,10 +141,10 @@
 
 /* Display heading sizes, fluid */
 @utility display-xl {
-  @apply font-display text-[clamp(2.75rem,5.6vw,5.25rem)] leading-[1] font-medium;
+  @apply font-display text-[clamp(2.5rem,5.4vw,5.25rem)] leading-[1.02] font-medium;
 }
 @utility display-lg {
-  @apply font-display text-[clamp(2.25rem,4.6vw,3.9rem)] leading-[1.04] font-medium;
+  @apply font-display text-[2.0625rem] leading-[1.15] font-medium;
 }
 @utility display-md {
   @apply font-display text-[clamp(1.6rem,2.6vw,2.25rem)] leading-[1.15] font-medium;
@@ -166,7 +181,7 @@
 }
 
 @utility btn-gold {
-  @apply btn bg-gold-500 text-brand-950 shadow-[0_12px_30px_-12px_color-mix(in_oklab,var(--gold-500)_80%,transparent)];
+  @apply btn bg-gold-500 text-brand-950;
   &::before {
     @apply bg-gold-300;
   }
@@ -310,6 +325,27 @@
   }
 }
 
+/*
+ * Headline lines never wrap from the sm breakpoint up. "Spend Less Time
+ * Prospecting." measures ~13.4em in Playfair Display, so the title is sized
+ * from its column width (7.2cqw ~= 13.9em budget) and capped by viewport
+ * height on short screens so the whole hero still fits in the first screen.
+ */
+@media (min-width: 40rem) {
+  .hero-title {
+    font-size: clamp(1.75rem, min(7.2cqw, 8.2vh), 5.25rem);
+  }
+}
+@media (min-width: 64rem) and (max-height: 48rem) {
+  .hero-stage {
+    padding-top: 6.5rem;
+    padding-bottom: 4rem;
+  }
+  .hero-body {
+    font-size: 1rem;
+    margin-top: 1.25rem;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

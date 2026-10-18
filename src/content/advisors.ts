@@ -2,16 +2,8 @@ import {
   BadgeCheck,
   Briefcase,
   CalendarCheck,
-  ClipboardList,
   Handshake,
-  Hourglass,
-  Megaphone,
-  MessagesSquare,
-  RefreshCw,
-  Scale,
   Star,
-  TrendingUp,
-  Users,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -22,13 +14,7 @@ const brand = site.shortName
 export const hero = {
   eyebrow: 'For Insurance Advisors',
   headline: ['Spend Less Time Prospecting.', 'More Time Advising.'],
-  body: `${brand} handles the marketing, the qualification, the meeting coordination, and places an independent CPA at every client meeting to eliminate your most common objection before it even comes up.`,
-  stats: [
-    { value: 20, label: 'Founding Advisor Spots' },
-    { value: 6, label: 'Step Acquisition Process' },
-    { value: 4, label: 'Professions, One Table' },
-    { value: 0, prefix: '$', label: 'Commission Splitting' },
-  ],
+  body: `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objection that kills most files never comes up.`,
 }
 
 export const disc = {
@@ -36,33 +22,31 @@ export const disc = {
   heading: ['Before you ever meet a client,', 'we’ve already done the work.'],
   paragraphs: [
     'Most lead generation companies hand you a name and a phone number. What happens next is your problem.',
-    `${brand} is different. Before any advisor introduction is made, every prospective client goes through our structured D.I.S.C. process: a four-stage conversation conducted by our team that ensures you walk into every meeting prepared, informed, and focused on what matters most: giving great advice.`,
-    'No cold introductions. No discovery from scratch. No wasted meetings.',
+    `${brand} is different, we are not a lead generation company. Before any advisor introduction is made, every prospective client goes through our structured D.I.S.C. process.`,
   ],
   quote: {
-    text: 'The D.I.S.C. process means every client we introduce has already been personally engaged, assessed, and prepared, so the first meeting with an advisor is a real conversation, not a cold pitch.',
-    attribution: `${brand} Client Success Team`,
+    text: 'No cold introductions. No discovery from scratch. No wasted meetings.',
   },
   stages: [
     {
       letter: 'D',
       title: 'Discovery',
-      body: 'We explore the prospect’s business structure, corporate goals, and financial picture to confirm they’re a suitable candidate.',
+      body: 'We explore their business structure, retained earnings, and financial gaps — so you arrive knowing their pain points before the first conversation.',
     },
     {
       letter: 'I',
       title: 'Intake',
-      body: 'We gather key data: retained earnings, insurance gaps, family priorities, decision-makers, so nothing is missing when the meeting begins.',
+      body: 'We complete a full Financial Needs Analysis (FNA) by capturing family priorities, existing coverage, and any gaps in protection.',
     },
     {
       letter: 'S',
       title: 'Strategic',
-      body: 'We identify which professional disciplines are most relevant (insurance, accounting, legal) and coordinate the right team for the meeting.',
+      body: 'We identify which professional disciplines are most relevant (insurance, accounting, investments,legal) and coordinate the right team for the meeting.',
     },
     {
       letter: 'C',
       title: 'Consult',
-      body: 'The client confirms their availability and consent, and a coordinated professional meeting is scheduled at a time that works for them.',
+      body: 'The client confirms their availability and consent, and a meeting is scheduled at a time that works for them. We strive to bring every decision-maker into the consult, setting you up for success from the first conversation.',
     },
   ],
   result:
@@ -70,38 +54,74 @@ export const disc = {
 }
 
 export const problem = {
-  eyebrow: 'The Problem',
-  heading: 'You know the feeling.',
-  intro:
-    'You spend hours prospecting, qualifying, and finally get a business owner in front of you. The meeting goes perfectly. The strategy is exactly what they need. And then they say it.',
-  quote: {
-    text: 'This all sounds incredible, but I need to run this by my accountant first. Why hasn’t my accountant told me about this?',
-    attribution: 'The objection that kills files',
-  },
-  outro:
-    'The file enters limbo. The client waits weeks for a reactive tax-filer to respond. The opportunity fades. And you start the prospecting cycle all over again.',
-  pains: [
+  heading: ['The objections we help', 'you handle.'],
+  /** Label on each slide's answer */
+  answerLabel: `How ${brand} solves it`,
+  /** The objections advisors hear, one slide each: the client's words, what they do to a file, and the answer */
+  objections: [
     {
-      icon: Hourglass,
+      title: 'The Accountant Objection',
+      eyebrow: 'Objection 01 — The deal-killer',
+      quote:
+        'This sounds incredible, but I need to run this by my accountant first. Why hasn’t my accountant told me about this?',
+      tagline: 'The objection that stalls corporate files',
+      answer: `The file doesn’t enter limbo waiting weeks for an accountant who wasn’t in the room. ${brand} brings an independent Chartered Professional Accountant (CPA) to the table for the consult to address corporate tax rules, retained earnings, and structure in real time.`,
+    },
+    {
+      title: 'The Decision-Maker Runaround',
+      eyebrow: 'Objection 02 — The delay tactic',
+      quote:
+        'I love this strategy, but I need to talk to my spouse and business partners before I can make any decisions.',
+      tagline: 'The runaround that kills closing momentum',
+      answer:
+        'During our 10–15 minute D.I.S.C. intake call, our Client Relationship Managers identify all voting shareholders, partners, and spouses in advance. We confirm that every primary decision-maker is present at the consultation — so you never have to pitch twice.',
+    },
+    {
+      title: 'The Legal Complexity Stall',
+      eyebrow: 'Objection 03 — The structural excuse',
+      quote:
+        'We need to update our shareholder agreement and restructure our holding company before we can touch this.',
+      tagline: 'The roadblock that shelves complex plans',
+      answer: `Legal and corporate roadblocks don’t derail the opportunity. ${brand} coordinates an established network of independent legal professionals who handle corporate restructuring, shareholder agreements, and contract execution — keeping the file moving without ever stalling.`,
+    },
+    {
+      title: 'The Cash-Flow Uncertainty',
+      eyebrow: 'Objection 04 — The unqualified time-waster',
+      quote:
+        'This makes complete sense, but we simply don’t have the funds or cash flow to commit to this right now.',
+      tagline: 'The objection that proves the lead was unvetted',
+      answer: `You never spend your valuable advisory time in meetings with cash-strapped leads. ${brand}’s front-end qualification screens for corporate surplus and cash-flow capacity before anything is booked. If a prospect isn’t in a position to act, they don’t reach your calendar — they stay in our nurture pipeline until they are.`,
+    },
+  ] satisfies {
+    title: string
+    eyebrow: string
+    quote: string
+    tagline: string
+    answer: string
+  }[],
+}
+
+export const benefits = {
+  eyebrow: 'Where We Help',
+  heading: ['Four things you’ll', 'never deal with again.'],
+  items: [
+    {
       title: 'Hours lost to cold prospecting',
       body: 'Every hour spent chasing unqualified leads is an hour not spent advising clients who actually need you.',
     },
     {
-      icon: ClipboardList,
       title: 'No intake done before the meeting',
       body: 'Walking into a meeting without knowing the client’s real financial picture means starting from scratch every time.',
     },
     {
-      icon: RefreshCw,
       title: 'The accountant objection stalls files',
       body: 'Without an accountant in the room, corporate tax questions create delays that kill momentum and close rates.',
     },
     {
-      icon: Scale,
       title: 'Legal and corporate gaps slow everything down',
       body: 'When clients need corporate restructuring or shareholder agreements, you have no one to pass to. The file stalls.',
     },
-  ] satisfies { icon: LucideIcon; title: string; body: string }[],
+  ] satisfies { title: string; body: string }[],
 }
 
 export const solution = {
@@ -119,103 +139,13 @@ export const solution = {
   ],
 }
 
-export type ProcessStep = {
-  icon: LucideIcon
-  label: string
-  title: string
-  paragraphs: string[]
-  highlight?: string
-}
-
 export const process = {
-  eyebrow: 'How It Works',
-  heading: ['From Initial Interest to', 'Professional Meeting'],
-  body: `Every step managed by ${brand}. Every meeting ready for you.`,
-  steps: [
-    {
-      icon: Megaphone,
-      label: 'Step One',
-      title: 'Targeted Digital Advertising',
-      paragraphs: [
-        `${brand} creates and runs targeted digital marketing campaigns designed to reach incorporated business owners and professionals who may benefit from corporate insurance and financial planning advice. Our campaigns focus on education, not hard selling, so the people who respond are genuinely interested in exploring their options.`,
-      ],
-    },
-    {
-      icon: MessagesSquare,
-      label: 'Step Two',
-      title: 'Personal Outreach & Initial Engagement',
-      paragraphs: [
-        `When a business owner expresses interest, our client success team reaches out personally, by phone, email, and SMS. Not with an automated sequence, but with real human touchpoints at every stage. Prospects who engage are invited to a virtual meeting with a dedicated ${brand} Client Manager, who explores their business structure, financial priorities, retained corporate earnings, and what they’re hoping to accomplish.`,
-        'This multi-touch, human-led process separates genuine prospects from general inquiries, and ensures every advisor introduction starts with a client who has already been personally engaged by our team.',
-      ],
-      highlight:
-        'We only move forward with prospects who are appropriate for a professional introduction, protecting your time and your close rate.',
-    },
-    {
-      icon: ClipboardList,
-      label: 'Step Three',
-      title: 'D.I.S.C. Intake & Discovery',
-      paragraphs: [
-        `Before any professional meeting is scheduled, ${brand} completes a structured Discovery, Intake, Strategic & Consult (D.I.S.C.) conversation with the prospective client. We capture their corporate structure, retained earnings ranges, advisory gaps, family financial priorities, and confirm all key decision-makers, including whether a spouse or business partner needs to be present.`,
-      ],
-      highlight:
-        'You walk into every meeting already knowing exactly what the client needs. No starting from scratch. No discovery surprises.',
-    },
-    {
-      icon: Users,
-      label: `Step Four: The ${brand} Advantage`,
-      title: 'Coordinated Professional Meeting. Four Professions, One Table.',
-      paragraphs: [
-        `This is where ${brand} is genuinely different. Every coordinated meeting includes an independent Chartered Professional Accountant (CPA) alongside you and the client. The CPA addresses corporate tax considerations, retained earnings strategies, and business structure questions in real time, within their professional scope, so the most common objection in corporate insurance disappears before it can stall your file.`,
-        'If the client raises legal needs (corporate restructuring, shareholder agreements, or financial planning requiring legal work) we connect them directly with an independent lawyer from our network, right then and there. You stay focused on the insurance conversation. Every other professional discipline is already in place.',
-      ],
-      highlight:
-        'Insurance Advisor + CPA + Lawyer + Corporate Insurance Specialist. Four professions, one coordinated process, one table. No delays. No dropped files.',
-    },
-    {
-      icon: CalendarCheck,
-      label: 'Step Five',
-      title: 'Ongoing Follow-Up & Relationship Coordination',
-      paragraphs: [
-        `Not every client is ready to make a decision after one meeting. ${brand} coordinates all ongoing follow-up, maintains client engagement, and schedules subsequent conversations on your behalf. You focus on the advice. We handle the administrative continuity that keeps opportunities alive.`,
-      ],
-    },
-    {
-      icon: TrendingUp,
-      label: 'Step Six',
-      title: 'Advisor Support & Performance Reviews',
-      paragraphs: [
-        `${brand} is designed to be an ongoing working relationship, not a one-time lead delivery. Through regular advisor check-ins, appointment tracking, and performance reviews, we identify what’s working, refine the process, and ensure your pipeline continues to grow over time.`,
-      ],
-    },
-  ] satisfies ProcessStep[],
-}
-
-export const advantage = {
-  badge: `The ${brand} Advantage`,
-  heading: ['The objection that kills files', 'dies at the table.'],
-  paragraphs: [
-    'The single biggest obstacle in corporate insurance, “I need to run this by my accountant”, is eliminated because the accountant is already in the room. And when legal, corporate, or structural questions come up, our network of independent lawyers and professionals means every discipline is represented.',
-    `This is what ${brand} means by one integrated approach. Four professions. One coordinated process. One table.`,
+  eyebrow: 'Advisor Support & Performance Reviews',
+  heading: [
+    'An ongoing working relationship,',
+    'not a one-time lead delivery.',
   ],
-  objections: [
-    {
-      title: 'The Accountant Objection',
-      quote: 'This sounds great, but I need to check with my accountant first.',
-      answer: `With ${brand}, the CPA is already at the meeting addressing tax considerations, retained earnings, and corporate structure in real time. The file keeps moving.`,
-    },
-    {
-      title: 'The Legal Complexity Objection',
-      quote:
-        'We’d need to restructure the corporation before we can move forward.',
-      answer: `${brand}’s network includes independent lawyers who handle corporate restructuring, shareholder agreements, and legal work so nothing falls through the cracks.`,
-    },
-    {
-      title: 'The “I’m Not Ready” Stall',
-      quote: 'Let me think about it.',
-      answer: `${brand}’s follow-up coordination keeps the relationship alive without requiring you to personally chase every file. We maintain engagement until the client is ready to move forward.`,
-    },
-  ],
+  body: 'Through regular advisor check-ins, appointment tracking, and performance reviews, we identify what’s working, refine the process, and ensure your pipeline continues to grow over time.',
 }
 
 export type Plan = {
