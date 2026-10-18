@@ -22,14 +22,13 @@ export default function Pricing() {
     <section id="services" className="bg-surface section-y">
       <div className="container-page">
         <SectionHeading
-          index="06"
           eyebrow={pricing.eyebrow}
           title={[pricing.heading[0], pricing.heading[1]]}
           description={pricing.body}
         />
 
         {/* Comparison table, from md up */}
-        <Reveal className="mt-14 hidden md:block" delay={0.1}>
+        <Reveal className="mt-14 hidden lg:block" delay={0.1}>
           <table className="w-full border-collapse">
             <thead>
               <tr className="align-bottom">
@@ -40,7 +39,7 @@ export default function Pricing() {
                   <th
                     key={plan.id}
                     scope="col"
-                    className={`w-[30%] p-7 text-left align-bottom ${
+                    className={`w-[30%] p-7 text-left align-top ${
                       plan.featured
                         ? 'panel-dark rounded-b-none text-on-dark'
                         : 'rounded-t-xl border border-b-0 border-ink/15 bg-card'
@@ -105,11 +104,11 @@ export default function Pricing() {
         </Reveal>
 
         {/* Stacked panels on small screens */}
-        <div className="mt-12 grid gap-6 md:hidden">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:hidden">
           {pricing.plans.map((plan) => (
-            <Reveal key={plan.id}>
+            <Reveal key={plan.id} className="h-full">
               <article
-                className={`p-7 ${plan.featured ? 'panel-dark text-on-dark' : 'panel'}`}
+                className={`flex h-full flex-col p-7 ${plan.featured ? 'panel-dark text-on-dark' : 'panel'}`}
               >
                 <PlanHeader plan={plan} />
                 <ul className="mt-6 space-y-3 border-t border-current/15 pt-6">
@@ -134,7 +133,7 @@ export default function Pricing() {
                 {plan.footnote && (
                   <p className="mt-5 text-xs text-ink/55">{plan.footnote}</p>
                 )}
-                <div className="mt-7">
+                <div className="mt-auto pt-7">
                   <PlanCta plan={plan} />
                 </div>
               </article>
@@ -156,10 +155,13 @@ function PlanHeader({ plan }: { plan: Plan }) {
   const dark = plan.featured
   return (
     <div>
-      {plan.badge && (
+      {plan.badge ? (
         <span className="mb-4 inline-block bg-gold-500 px-2.5 py-1 font-sans text-[0.6rem] font-bold tracking-[0.2em] text-brand-950 uppercase">
           {plan.badge}
         </span>
+      ) : (
+        // Keeps the two plan headers on the same rows when only one has a badge
+        <span className="mb-4 block h-[1.45rem]" aria-hidden="true" />
       )}
       <p className={`eyebrow ${dark ? 'text-gold-400' : ''}`}>{plan.label}</p>
       <h3

@@ -8,6 +8,21 @@ import './index.css'
 import App from './App.tsx'
 import { preloadRoute } from './routes.ts'
 
+/**
+ * A refresh always opens at the top of the page. Browsers otherwise restore
+ * the last scroll position (and honour a #section left in the address bar
+ * by the scroll cue or the nav), which would drop a returning reader mid-page.
+ * Links that arrive with a #section from elsewhere still land on that section.
+ */
+const nav = performance.getEntriesByType('navigation')[0] as
+  PerformanceNavigationTiming | undefined
+if (nav?.type === 'reload') {
+  history.scrollRestoration = 'manual'
+  if (location.hash)
+    history.replaceState(null, '', location.pathname + location.search)
+  window.scrollTo(0, 0)
+}
+
 const root = document.getElementById('root')!
 const app = (
   <StrictMode>

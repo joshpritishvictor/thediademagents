@@ -9,7 +9,6 @@ export default function Who() {
     <section id="who" className="bg-surface-alt section-y">
       <div className="container-page">
         <SectionHeading
-          index="07"
           eyebrow={who.eyebrow}
           title={[who.heading[0], who.heading[1]]}
           description={who.intro}

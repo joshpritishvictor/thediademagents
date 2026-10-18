@@ -24,7 +24,7 @@ export default function Logo({ light = false }: { light?: boolean }) {
       />
       {tag && (
         <span
-          className={`hidden border-l pl-3 font-sans text-[0.62rem] font-bold tracking-[0.3em] uppercase sm:inline-block ${
+          className={`hidden border-l pl-3 font-sans text-[0.62rem] font-bold tracking-[0.3em] uppercase xl:inline-block ${
             light
               ? 'border-gold-500/50 text-gold-400'
               : 'border-brand-900/30 text-brand-900'

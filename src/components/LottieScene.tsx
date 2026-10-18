@@ -12,6 +12,10 @@ type LottieSceneProps = {
   /** Static stand-in shown before the player loads (and in the pre-rendered HTML) */
   poster?: ReactNode
   loop?: boolean
+  /** Play only this frame range and hold it; see <LottiePlayer> */
+  segment?: [number, number]
+  /** Hold the current frame of a segment; playing resumes when cleared */
+  paused?: boolean
 }
 
 /**
@@ -26,6 +30,8 @@ export default function LottieScene({
   className = '',
   poster,
   loop = true,
+  segment,
+  paused,
 }: LottieSceneProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
@@ -54,6 +60,8 @@ export default function LottieScene({
           <LottiePlayer
             src={src}
             loop={loop}
+            segment={segment}
+            paused={paused}
             stillAt={reduceMotion ? 0.6 : undefined}
             onReady={() => setReady(true)}
             className={`absolute inset-0 h-full w-full transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}
