@@ -73,6 +73,22 @@
   body {
     @apply bg-surface font-sans text-[1.0625rem] leading-relaxed text-ink;
   }
+  /*
+   * Section-by-section scrolling. Each top-level block of a page is a snap
+   * point; a block taller than the screen still scrolls freely inside it.
+   * Layout adds .snap once the page has rendered, so snapping never fights
+   * the initial layout or a hash scroll.
+   */
+  html.snap {
+    scroll-snap-type: y proximity;
+  }
+  #main > section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+  body > div > footer {
+    scroll-snap-align: end;
+  }
   h1,
   h2,
   h3 {

@@ -32,7 +32,6 @@ export default function Apply() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="rule-gold" aria-hidden="true" />
               <p className="eyebrow text-gold-400">{applyPage.eyebrow}</p>
             </m.div>
             <m.h1
@@ -96,7 +95,6 @@ export default function Apply() {
           <Reveal className="lg:col-span-8">
             <div className="panel p-6 md:p-10">
               <div className="flex items-center gap-4">
-                <span className="rule-gold" aria-hidden="true" />
                 <p className="eyebrow">Step one</p>
               </div>
               <h2
@@ -119,7 +117,6 @@ export default function Apply() {
             <aside className="space-y-10">
               <div>
                 <p className="eyebrow">Prefer to talk first?</p>
-                <span className="mt-3 rule-gold" aria-hidden="true" />
                 <ul className="mt-5 space-y-3">
                   <li>
                     <a
@@ -143,7 +140,6 @@ export default function Apply() {
               </div>
               <div>
                 <p className="eyebrow">What happens next</p>
-                <span className="mt-3 rule-gold" aria-hidden="true" />
                 <ol className="mt-5 border-t border-ink/15">
                   {nextSteps.map((step, i) => (
                     <li

@@ -12,26 +12,35 @@ export default function Process() {
   const [active, setActive] = useState(0)
   const stepRefs = useRef<(HTMLElement | null)[]>([])
 
+  // The active step is the last one whose top has passed the upper part of the
+  // viewport. A scroll listener (one read per frame) is steadier than an
+  // intersection band, so the index never flickers between two steps.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActive(Number((entry.target as HTMLElement).dataset.step))
-          }
-        }
-      },
-      { rootMargin: '-40% 0px -50% 0px', threshold: 0 },
-    )
-    stepRefs.current.forEach((el) => el && observer.observe(el))
-    return () => observer.disconnect()
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const line = window.innerHeight * 0.4
+      let current = 0
+      stepRefs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top <= line) current = i
+      })
+      setActive((prev) => (prev === current ? prev : current))
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   const jump = (i: number) =>
-    stepRefs.current[i]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
+    stepRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   return (
     <section id="how-it-works" className="bg-surface section-y">
@@ -44,7 +53,7 @@ export default function Process() {
         />
 
         <div className="mt-16 grid gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Sticky index */}
+          {/* Sticky index: fixed number column, titles aligned, one gold bar that slides between rows */}
           <nav
             aria-label="Process steps"
             className="hidden lg:col-span-4 lg:block"
@@ -53,34 +62,35 @@ export default function Process() {
               {process.steps.map(({ title }, i) => {
                 const current = i === active
                 return (
-                  <li key={title} className="border-b border-ink/15">
+                  <li key={title} className="relative border-b border-ink/15">
+                    {current && (
+                      <m.span
+                        layoutId="process-marker"
+                        aria-hidden="true"
+                        className="absolute top-0 bottom-0 -left-px w-0.5 bg-gold-500"
+                        transition={{
+                          type: 'spring',
+                          bounce: 0,
+                          duration: 0.45,
+                        }}
+                      />
+                    )}
                     <button
                       type="button"
                       onClick={() => jump(i)}
                       aria-current={current ? 'step' : undefined}
-                      className="group flex w-full items-baseline gap-5 py-4 text-left"
+                      className="group grid w-full grid-cols-[2.25rem_1fr] items-start gap-3 py-4 pl-4 text-left"
                     >
                       <span
-                        className={`font-display text-sm italic transition-colors ${current ? 'text-gold-600' : 'text-ink/40'}`}
+                        className={`pt-0.5 font-display text-sm italic transition-colors duration-300 ${current ? 'text-gold-600' : 'text-ink/40'}`}
                       >
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span
-                        className={`font-sans text-sm font-semibold transition-colors ${current ? 'text-brand-950' : 'text-ink/55 group-hover:text-ink'}`}
+                        className={`font-sans text-sm leading-snug transition-colors duration-300 ${current ? 'font-bold text-brand-950' : 'font-semibold text-ink/55 group-hover:text-ink'}`}
                       >
                         {title}
                       </span>
-                      {current && (
-                        <m.span
-                          layoutId="process-marker"
-                          className="ml-auto size-2 rotate-45 bg-gold-500"
-                          transition={{
-                            type: 'spring',
-                            bounce: 0.2,
-                            duration: 0.5,
-                          }}
-                        />
-                      )}
                     </button>
                   </li>
                 )
@@ -100,7 +110,7 @@ export default function Process() {
                     ref={(el) => {
                       stepRefs.current[i] = el
                     }}
-                    className={featured ? 'my-10' : ''}
+                    className={`scroll-mt-28 ${featured ? 'my-10' : ''}`}
                   >
                     <Reveal>
                       <article

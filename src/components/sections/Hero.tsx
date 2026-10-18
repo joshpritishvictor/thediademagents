@@ -28,7 +28,6 @@ export default function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <span className="rule-gold" aria-hidden="true" />
             <p className="eyebrow text-gold-400">{hero.eyebrow}</p>
           </m.div>
 

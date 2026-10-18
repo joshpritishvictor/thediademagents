@@ -38,7 +38,6 @@ export default function SectionHeading({
               {index}
             </span>
           )}
-          <span className="rule-gold" aria-hidden="true" />
           {eyebrow && (
             <p className={`eyebrow ${light ? 'text-gold-400' : ''}`}>
               {eyebrow}

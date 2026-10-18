@@ -30,7 +30,6 @@ export default function Problem() {
                 {problem.quote.text}
               </blockquote>
               <figcaption className="mt-5 flex items-center gap-4">
-                <span className="rule-gold" aria-hidden="true" />
                 <span className="eyebrow text-gold-400">
                   {problem.quote.attribution}
                 </span>

@@ -123,7 +123,6 @@ function FooterColumn({
   return (
     <div className={className}>
       <p className="eyebrow text-gold-500">{title}</p>
-      <span className="mt-3 rule-gold" aria-hidden="true" />
       <ul className="mt-5 space-y-3">{children}</ul>
     </div>
   )

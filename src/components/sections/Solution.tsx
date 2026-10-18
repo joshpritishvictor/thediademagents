@@ -12,7 +12,6 @@ export default function Solution() {
               <span className="font-display text-sm text-gold-500 italic">
                 03
               </span>
-              <span className="rule-gold" aria-hidden="true" />
               <p className="eyebrow">What we take off your plate</p>
             </div>
             <h2 className="mt-6 display-lg text-brand-950">

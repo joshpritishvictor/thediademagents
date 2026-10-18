@@ -16,9 +16,7 @@ export default function FinalCta() {
 
       <Reveal className="relative container-page text-center">
         <div className="mx-auto flex items-center justify-center gap-4">
-          <span className="rule-gold" aria-hidden="true" />
           <p className="eyebrow text-gold-400">Next step</p>
-          <span className="rule-gold" aria-hidden="true" />
         </div>
         <h2 className="mx-auto mt-8 max-w-5xl display-xl text-on-dark">
           {finalCta.heading[0]}

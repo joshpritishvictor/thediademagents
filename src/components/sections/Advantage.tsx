@@ -21,7 +21,6 @@ export default function Advantage() {
               <span className="font-display text-sm text-gold-500 italic">
                 05
               </span>
-              <span className="rule-gold" aria-hidden="true" />
               <p className="eyebrow text-gold-400">{advantage.badge}</p>
             </div>
             <h2 className="mt-6 display-lg text-on-dark">
