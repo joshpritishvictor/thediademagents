@@ -3,10 +3,9 @@ import Benefits from '../components/sections/Benefits'
 import Disc from '../components/sections/Disc'
 import FinalCta from '../components/sections/FinalCta'
 import Hero from '../components/sections/Hero'
-import Pricing from '../components/sections/Pricing'
 import Problem from '../components/sections/Problem'
+import ServicesTeaser from '../components/sections/ServicesTeaser'
 import Process from '../components/sections/Process'
-import Solution from '../components/sections/Solution'
 import Testimonials from '../components/sections/Testimonials'
 import Who from '../components/sections/Who'
 import { pricing } from '../content/advisors'
@@ -44,9 +43,8 @@ export default function Home() {
       <Disc />
       <Problem />
       <Benefits />
-      <Solution />
       <Process />
-      <Pricing />
+      <ServicesTeaser />
       <Who />
       <Testimonials />
       <FinalCta />

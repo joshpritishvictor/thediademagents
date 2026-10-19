@@ -3,11 +3,17 @@ import bundledLogo from '../assets/images/logo-diadem.svg'
 import bundledLogoDark from '../assets/images/logo-diadem-dark.svg'
 import { site } from '../content/site'
 
-/** The wordmark with a small square tag; `light` is the version for dark backgrounds */
-export default function Logo({ light = false }: { light?: boolean }) {
+/** The wordmark, optionally with its small tag beside it; `light` is the version for dark backgrounds */
+export default function Logo({
+  light = false,
+  withTag = true,
+}: {
+  light?: boolean
+  withTag?: boolean
+}) {
   const custom = light ? site.logo.onDark : site.logo.onLight
   const src = custom || (light ? bundledLogoDark : bundledLogo)
-  const tag = site.logo.tag.trim()
+  const tag = withTag ? site.logo.tag.trim() : ''
 
   return (
     <Link

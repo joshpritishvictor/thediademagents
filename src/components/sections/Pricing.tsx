@@ -17,18 +17,24 @@ const has = (plan: Plan, feature: string) =>
   // "Everything in Flex" means Premium inherits the Flex list
   (plan.id === 'premium' && flexFeatures.includes(feature))
 
-export default function Pricing() {
+/** The full comparison of the two services; `heading` is off when a page above it already introduces them */
+export default function Pricing({ heading = true }: { heading?: boolean }) {
   return (
-    <section id="services" className="bg-surface section-y">
+    <section className={`bg-surface`}>
       <div className="container-page">
-        <SectionHeading
-          eyebrow={pricing.eyebrow}
-          title={[pricing.heading[0], pricing.heading[1]]}
-          description={pricing.body}
-        />
+        {heading && (
+          <SectionHeading
+            eyebrow={pricing.eyebrow}
+            title={[pricing.heading[0], pricing.heading[1]]}
+            description={pricing.body}
+          />
+        )}
 
         {/* Comparison table, from md up */}
-        <Reveal className="mt-14 hidden lg:block" delay={0.1}>
+        <Reveal
+          className={`hidden lg:block ${heading ? 'mt-14' : ''}`}
+          delay={0.1}
+        >
           <table className="w-full border-collapse">
             <thead>
               <tr className="align-bottom">

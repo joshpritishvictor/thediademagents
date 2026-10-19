@@ -1,16 +1,15 @@
-import { LazyMotion, MotionConfig } from 'motion/react'
+import { domMax, LazyMotion, MotionConfig } from 'motion/react'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import { routes } from './routes'
 
-// Animation features are split out of the main bundle and loaded after first render
-const loadMotionFeatures = () =>
-  import('./lib/motion-features').then((mod) => mod.default)
-
 export default function App() {
   return (
-    // strict: errors if a full `motion.*` component sneaks in and undoes the split
-    <LazyMotion features={loadMotionFeatures} strict>
+    // Features load with the app (not lazily): elements that reveal on scroll need their
+    // hidden start state applied at first render, including in the pre-rendered HTML,
+    // or they are already visible by the time they come into view and never transition.
+    // strict: errors if a full `motion.*` component sneaks in and bloats the bundle.
+    <LazyMotion features={domMax} strict>
       {/* Honour the OS "reduce motion" setting for every animation */}
       <MotionConfig reducedMotion="user">
         <Routes>

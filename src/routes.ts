@@ -27,6 +27,8 @@ function page(name: string): Page {
 export const routes = [
   { path: '/', ...page('Home') },
   { path: '/about/', ...page('About') },
+  { path: '/process/', ...page('Process') },
+  { path: '/services/', ...page('Services') },
   { path: '/apply/', ...page('Apply') },
   { path: '*', ...page('NotFound') },
 ]

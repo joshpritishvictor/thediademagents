@@ -8,7 +8,7 @@ export { routeModules } from './routes'
 export const siteUrl = site.url
 
 /** Every URL to pre-render at build time */
-export const urls = ['/', '/about/', '/apply/']
+export const urls = ['/', '/about/', '/process/', '/services/', '/apply/']
 
 /** Renders a URL to HTML, waiting for lazy pages to load */
 export async function render(url: string) {

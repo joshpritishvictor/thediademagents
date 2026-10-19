@@ -3,8 +3,8 @@ import Reveal from './Reveal'
 
 type SectionHeadingProps = {
   eyebrow?: string
-  /** Plain words, then the italic gold phrase */
-  title: string | [string, string]
+  /** Plain words, then the italic gold phrase, then optional plain words after it */
+  title: string | [string, string] | [string, string, string]
   description?: ReactNode
   align?: 'left' | 'center'
   light?: boolean
@@ -23,7 +23,7 @@ export default function SectionHeading({
   size = 'lg',
   className = '',
 }: SectionHeadingProps) {
-  const [plain, accent] = Array.isArray(title) ? title : [title, undefined]
+  const [plain, accent, tail] = Array.isArray(title) ? title : [title]
   const centered = align === 'center'
   return (
     <Reveal
@@ -42,6 +42,7 @@ export default function SectionHeading({
             <em className="accent">{accent}</em>
           </>
         )}
+        {tail && <> {tail}</>}
       </h2>
       {description && (
         <p

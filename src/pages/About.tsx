@@ -137,7 +137,7 @@ export default function About() {
                   <span>{cta.apply}</span>
                   <ArrowRight size={16} aria-hidden="true" />
                 </Link>
-                <Link to="/#services" className="btn-outline text-on-dark">
+                <Link to="/services/" className="btn-outline text-on-dark">
                   <span>See {site.shortName} pricing</span>
                 </Link>
               </div>
