@@ -143,6 +143,8 @@ export type Channel =
   | 'text'
 
 export type ComparisonItem = {
+  /** Bold opening phrase, when the item has one */
+  lead?: string
   text: string
   /** Which services include it */
   plans: Plan['id'][]
@@ -285,15 +287,18 @@ export const solution = {
       label: 'After the meeting',
       items: [
         {
-          text: `Ongoing client opportunities through ${brand}’s rotating allocation system, with no per-appointment fees`,
+          lead: 'Ongoing client opportunities',
+          text: `through ${brand}’s rotating allocation system, with no per-appointment fees`,
           plans: premium,
         },
         {
-          text: 'Dedicated follow-up support to keep prospective clients engaged after their meetings',
+          lead: 'Dedicated follow-up support',
+          text: 'to keep prospective clients engaged after their meetings',
           plans: premium,
         },
         {
-          text: 'Priority access to reassigned clients: first consideration for suitable opportunities released by other advisors',
+          lead: 'Priority access to reassigned clients:',
+          text: 'first consideration for suitable opportunities released by other advisors',
           plans: premium,
         },
       ],
@@ -302,7 +307,8 @@ export const solution = {
       label: 'Partnership and support',
       items: [
         {
-          text: 'Senior Advisor Partnership: co-advise with an experienced advisor on eligible cases, under a 50/50 commission split agreed between the two licensed advisors',
+          lead: 'Senior Advisor Partnership:',
+          text: 'co-advise with an experienced advisor on eligible cases, under a 50/50 commission split agreed between the two licensed advisors',
           plans: premium,
         },
         {
@@ -400,6 +406,8 @@ export type FeePlan = {
   /** Billing model, e.g. "Pay as you go" */
   kicker: string
   name: string
+  /** How many clients the service covers */
+  clients: string
   /** The headline fee and what it is charged per */
   price: string
   tax: string
@@ -412,43 +420,51 @@ export type FeePlan = {
   includes: string
   /** Optional all-in total line */
   total?: string
+  /** A plan whose features this one includes; they are summed up in one line rather than repeated */
+  inherits?: Plan['id']
   featured?: boolean
 }
 
-/** What each service costs, laid out fee by fee */
+/** What each service costs, laid out fee by fee, then what it includes */
 export const fees = {
+  includedLabel: 'What’s included',
+  /** The one line that stands in for an inherited plan's features, e.g. "Everything in Diadem Flex" */
+  everythingIn: (name: string) => `Everything in ${name}`,
   plans: [
     {
       id: 'flex',
       kicker: 'Pay as you go',
       name: `${brand} Flex`,
-      price: '$750',
+      clients: 'You choose how many clients you take on',
+      price: 'CAD 750',
       tax: '+ GST',
       per: 'per client, billed only after you’ve met with them',
       promise: 'No appointment, no charge.',
       management: {
-        price: '$750',
+        price: 'CAD 750',
         text: 'per month management fee + GST, paid upfront',
       },
       includes:
-        'Includes $250 CRM, $250 operations, and $250 client manager and scheduling.',
+        'Includes CAD 250 CRM, CAD 250 operations, and CAD 250 client manager and scheduling.',
     },
     {
       id: 'premium',
       kicker: 'Flat rate',
       name: `${brand} Premium Advisor`,
-      price: '$4,000',
+      clients: 'Unlimited clients',
+      price: 'CAD 4,000',
       tax: '+ GST',
       per: 'per month for ongoing client appointments, with no per-client fees',
       promise: 'Unlimited qualified appointments through rotating allocation.',
       management: {
-        price: '$999',
+        price: 'CAD 999',
         text: 'per month management fee + GST',
       },
       includes:
-        'Includes $250 CRM, $250 operations, and $499 client manager, scheduling, and personal follow-up. We chase the client so you never have to.',
+        'Includes CAD 250 CRM, CAD 250 operations, and CAD 499 client manager, scheduling, and personal follow-up. We chase the client so you never have to.',
       total:
-        '$4,999 per month all-in, plus GST. Founding rate, first 20 advisors only.',
+        'CAD 4,999 per month all-in, plus GST. Founding rate, first 20 advisors only.',
+      inherits: 'flex',
       featured: true,
     },
   ] satisfies FeePlan[],
