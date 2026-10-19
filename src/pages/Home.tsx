@@ -4,7 +4,6 @@ import Disc from '../components/sections/Disc'
 import FinalCta from '../components/sections/FinalCta'
 import Hero from '../components/sections/Hero'
 import Problem from '../components/sections/Problem'
-import ServicesTeaser from '../components/sections/ServicesTeaser'
 import Process from '../components/sections/Process'
 import Testimonials from '../components/sections/Testimonials'
 import Who from '../components/sections/Who'
@@ -44,7 +43,6 @@ export default function Home() {
       <Problem />
       <Benefits />
       <Process />
-      <ServicesTeaser />
       <Who />
       <Testimonials />
       <FinalCta />

@@ -39,11 +39,11 @@ export default function Services() {
         }}
       />
 
-      <section className="relative overflow-hidden bg-brand-950 pt-32 pb-20 text-on-dark md:pt-40 md:pb-28">
-        <div className="glow-soft" aria-hidden="true" />
-        <div className="relative container-page">
+      {/* The page opens with this section, like Our Process, so its top padding clears the fixed header */}
+      <section className="bg-surface pt-24 pb-20 md:pt-28 md:pb-24">
+        <div className="container-page">
           <m.p
-            className="eyebrow text-gold-400"
+            className="eyebrow"
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -51,7 +51,7 @@ export default function Services() {
             {pricing.eyebrow}
           </m.p>
           <m.h1
-            className="mt-6 max-w-4xl display-xl text-on-dark"
+            className="mt-6 font-display text-[clamp(2.25rem,3.6vw,3.5rem)] leading-[1.05] font-medium text-brand-950 lg:whitespace-nowrap"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: easeOutExpo }}
@@ -60,7 +60,7 @@ export default function Services() {
             <em className="accent">{pricing.heading[1]}</em>
           </m.h1>
           <m.p
-            className="mt-6 max-w-2xl text-lg text-on-dark/70 md:text-xl"
+            className="mt-6 max-w-2xl text-lg text-ink-muted md:text-xl"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: easeOutExpo }}
@@ -71,15 +71,13 @@ export default function Services() {
           <div className="mt-14 lg:mt-16">
             <FeePanels delay={0.45} />
           </div>
-        </div>
-      </section>
 
-      <section className="bg-surface py-14 lg:py-16">
-        <Reveal className="container-page">
-          <p className="mx-auto max-w-4xl font-sans text-xs leading-relaxed text-ink/50">
-            {pricing.disclaimer}
-          </p>
-        </Reveal>
+          <Reveal>
+            <p className="mx-auto mt-12 max-w-4xl border-t border-ink/10 pt-6 font-sans text-xs leading-relaxed text-ink/50">
+              {pricing.disclaimer}
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <FinalCta />
