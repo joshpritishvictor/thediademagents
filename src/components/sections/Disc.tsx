@@ -21,7 +21,7 @@ export default function Disc() {
       className="flex flex-col bg-surface lg:min-h-[calc(100svh-var(--snap-top))]"
     >
       <ProfessionsTicker />
-      <div className="container-page py-20 lg:my-auto lg:py-10">
+      <div className="container-page py-20 lg:my-auto lg:py-4">
         {/* Two columns in two rows: the heading shares its row with the circle row, so the circles sit level with it; the text and the stage panel share the second */}
         <div className="grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-x-16">
           <SectionHeading
@@ -31,7 +31,7 @@ export default function Disc() {
             className="lg:col-start-1 lg:row-start-1"
           />
           <div className="lg:col-start-1 lg:row-start-2 lg:flex lg:flex-col">
-            <Reveal className="mt-6 space-y-4 text-ink-muted" delay={0.1}>
+            <Reveal className="mt-5 space-y-4 text-ink-muted" delay={0.1}>
               {disc.paragraphs.map((p, i) => (
                 <p
                   key={i}
@@ -45,7 +45,7 @@ export default function Disc() {
             </Reveal>
             {/* Pinned to the row's foot so the quote ends level with the stage panel opposite */}
             <Reveal delay={0.2} className="lg:mt-auto">
-              <figure className="mt-8 border-l-2 border-gold-500 pl-6">
+              <figure className="mt-6 border-l-2 border-gold-500 pl-6">
                 <blockquote className="font-display text-lg leading-relaxed text-brand-950">
                   “{disc.quote.text}”
                 </blockquote>
@@ -163,7 +163,7 @@ function StageTabs() {
                   onClick={() => setActive(i)}
                   onFocus={() => setPaused(true)}
                   onBlur={() => setPaused(false)}
-                  className={`group relative flex flex-col items-center gap-2 border-r border-ink/15 px-2 py-5 transition-colors last:border-r-0 ${
+                  className={`group relative flex flex-col items-center gap-2 border-r border-ink/15 px-2 py-4 transition-colors last:border-r-0 ${
                     selected ? 'bg-brand-950' : 'hover:bg-surface-alt'
                   }`}
                 >
@@ -201,7 +201,20 @@ function StageTabs() {
             })}
           </div>
 
-          <div className="relative min-h-[8.5rem] flex-1 overflow-hidden border-t border-ink/15 px-6 py-5 md:px-8">
+          <div className="relative grid flex-1 overflow-hidden border-t border-ink/15 px-6 py-5 md:px-8">
+            {/* An invisible copy of every stage sits in the same cell, so the panel is always as tall as the longest one and nothing shifts between stages */}
+            <div
+              className="invisible col-start-1 row-start-1 grid"
+              aria-hidden="true"
+            >
+              {disc.stages.map(({ title, body }) => (
+                <div key={title} className="col-start-1 row-start-1">
+                  <p className="eyebrow">Stage</p>
+                  <h3 className="mt-2 display-md">{title}</h3>
+                  <p className="mt-3 max-w-xl">{body}</p>
+                </div>
+              ))}
+            </div>
             <AnimatePresence mode="wait">
               <m.div
                 key={lit}
@@ -212,7 +225,7 @@ function StageTabs() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.45, ease: easeOutExpo }}
-                className="relative"
+                className="relative col-start-1 row-start-1"
               >
                 <p className="eyebrow">
                   Stage {lit + 1} of {disc.stages.length}

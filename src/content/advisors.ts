@@ -1,8 +1,14 @@
 import {
   BadgeCheck,
   Briefcase,
+  Calculator,
   CalendarCheck,
+  ClipboardList,
   Handshake,
+  Megaphone,
+  MessagesSquare,
+  RefreshCw,
+  Scale,
   Star,
   type LucideIcon,
 } from 'lucide-react'
@@ -46,7 +52,7 @@ export const disc = {
     {
       letter: 'C',
       title: 'Consult',
-      body: 'The client confirms their availability and consent, and a meeting is scheduled at a time that works for them. We strive to bring every decision-maker into the consult, setting you up for success from the first conversation.',
+      body: 'The client confirms their availability and a meeting is scheduled. We strive to bring every decision-maker into the consult, setting you up for success from the first conversation.',
     },
   ],
   result:
@@ -124,19 +130,192 @@ export const benefits = {
   ] satisfies { title: string; body: string }[],
 }
 
+/** A channel a service reaches people through; drawn with its brand mark by <ChannelIcon> */
+export type Channel =
+  | 'facebook'
+  | 'instagram'
+  | 'tiktok'
+  | 'youtube'
+  | 'linkedin'
+  | 'googleads'
+  | 'email'
+  | 'phone'
+  | 'text'
+
+export type ComparisonItem = {
+  text: string
+  /** Which services include it */
+  plans: Plan['id'][]
+  /** Shown as a row of marks under the text */
+  channels?: Channel[]
+}
+
+export type ComparisonGroup = {
+  label: string
+  items: ComparisonItem[]
+}
+
+const both: Plan['id'][] = ['flex', 'premium']
+const premium: Plan['id'][] = ['premium']
+
+export type ProcessStep = {
+  icon: LucideIcon
+  label: string
+  title: string
+  body: string
+  /** Set apart in the list: the step that makes the service different */
+  featured?: boolean
+  /** Platforms or contact methods the step uses, shown as badges under the text */
+  channels?: Channel[]
+}
+
 export const solution = {
+  eyebrow: 'What we take off your plate',
   heading: ['The', `${brand}`, 'difference.'],
-  body: 'We don’t just hand you a list of names. We manage the entire process, from finding the right client to putting a qualified team around the table.',
-  points: [
-    'We run the targeted digital advertising campaigns',
-    'We personally reach out to every interested prospect',
-    'We complete a structured D.I.S.C. (Discovery, Intake, Strategic & Consult) intake before your meeting',
-    'We schedule the meeting at the client’s convenience',
-    'An independent CPA attends every meeting alongside you',
-    'Lawyers available for corporate and legal needs',
-    'You focus entirely on providing insurance advice',
-    'We handle all follow-up and appointment coordination',
-  ],
+  body: 'No cold lists. No chasing. We pre-qualify every client, get them hot, and pave a clear path for you to close. Everything in between, we handle.',
+  /** The process end to end, in the order it happens */
+  steps: [
+    {
+      icon: Megaphone,
+      label: 'Step One',
+      title: 'Targeted Digital Advertising',
+      body: 'We run the targeted digital advertising campaigns across the platforms your future clients already use.',
+      channels: [
+        'facebook',
+        'instagram',
+        'tiktok',
+        'youtube',
+        'linkedin',
+        'googleads',
+      ],
+    },
+    {
+      icon: MessagesSquare,
+      label: 'Step Two',
+      title: 'Personal Outreach',
+      body: 'We personally reach out to every interested prospect.',
+      channels: ['email', 'phone', 'text'],
+    },
+    {
+      icon: ClipboardList,
+      label: 'Step Three',
+      title: 'D.I.S.C. Intake',
+      body: 'We gather the business background and key priorities through our custom DISC process, so you walk in fully prepared',
+    },
+    {
+      icon: CalendarCheck,
+      label: 'Step Four',
+      title: 'Meeting Scheduled',
+      body: 'We schedule the meeting at the client’s convenience.',
+    },
+    {
+      icon: Calculator,
+      label: `Step Five: The ${brand} Advantage`,
+      title: 'Independent CPA at the Table',
+      body: 'Our In-House accountant attends every meeting alongside you.',
+      featured: true,
+    },
+    {
+      icon: Scale,
+      label: 'Step Six',
+      title: 'Legal Support on Call',
+      body: 'Lawyers available for corporate and legal needs.',
+    },
+    {
+      icon: BadgeCheck,
+      label: 'Step Seven',
+      title: 'You Give the Advice',
+      body: 'You focus entirely on providing advice.',
+    },
+    {
+      icon: RefreshCw,
+      label: 'Step Eight',
+      title: 'Follow-Up & Coordination',
+      body: 'We handle all follow-up and appointment coordination.',
+    },
+  ] satisfies ProcessStep[],
+  /** What each service includes, grouped by where it happens in the process; a column lists only its own items */
+  groups: [
+    {
+      label: 'Client acquisition',
+      items: [
+        {
+          text: 'Targeted digital client acquisition campaigns',
+          plans: both,
+          channels: [
+            'facebook',
+            'instagram',
+            'tiktok',
+            'youtube',
+            'linkedin',
+            'googleads',
+          ],
+        },
+        {
+          text: 'Personal prospect engagement and qualification',
+          plans: both,
+          channels: ['email', 'phone', 'text'],
+        },
+      ],
+    },
+    {
+      label: 'Before the meeting',
+      items: [
+        { text: 'D.I.S.C. process completed before your meeting', plans: both },
+        {
+          text: 'Appointments booked into your calendar (no-shows rescheduled or replaced)',
+          plans: both,
+        },
+      ],
+    },
+    {
+      label: 'At the meeting',
+      items: [
+        {
+          text: 'Our in-house accountant at every coordinated meeting',
+          plans: both,
+        },
+        {
+          text: 'Access to independent legal professionals when needed',
+          plans: both,
+        },
+      ],
+    },
+    {
+      label: 'After the meeting',
+      items: [
+        {
+          text: `Ongoing client opportunities through ${brand}’s rotating allocation system, with no per-appointment fees`,
+          plans: premium,
+        },
+        {
+          text: 'Dedicated follow-up support to keep prospective clients engaged after their meetings',
+          plans: premium,
+        },
+        {
+          text: 'Priority access to reassigned clients: first consideration for suitable opportunities released by other advisors',
+          plans: premium,
+        },
+      ],
+    },
+    {
+      label: 'Partnership and support',
+      items: [
+        {
+          text: 'Senior Advisor Partnership: co-advise with an experienced advisor on eligible cases, under a 50/50 commission split agreed between the two licensed advisors',
+          plans: premium,
+        },
+        {
+          text: 'Regular advisor check-ins and performance reviews',
+          plans: premium,
+        },
+        {
+          text: 'Dedicated administrative and coordination support',
+          plans: premium,
+        },
+      ],
+    },
+  ] satisfies ComparisonGroup[],
 }
 
 export const process = {
@@ -214,6 +393,65 @@ export const pricing = {
     },
   ] satisfies Plan[],
   disclaimer: `${brand} Premium is a comprehensive monthly coordination service. No minimum or maximum appointment volume is guaranteed. ${brand} Premium Advisor pricing is locked in for the life of the advisor’s service contract and is available exclusively to the first 20 enrolled advisors. Once all 20 spots are filled, standard rates will apply to new enrolments. ${brand} reserves the right to close ${brand} Premium Advisor enrolment at any time. Appointment fees under ${brand} Flex are separate from monthly management fees. All regulated professional services are provided by independent licensed professionals.`,
+}
+
+export type FeePlan = {
+  id: Plan['id']
+  /** Billing model, e.g. "Pay as you go" */
+  kicker: string
+  name: string
+  /** The headline fee and what it is charged per */
+  price: string
+  tax: string
+  per: string
+  /** The one-line promise under the fee */
+  promise: string
+  /** The management fee on top */
+  management: { price: string; text: string }
+  /** What the management fee covers */
+  includes: string
+  /** Optional all-in total line */
+  total?: string
+  featured?: boolean
+}
+
+/** What each service costs, laid out fee by fee */
+export const fees = {
+  plans: [
+    {
+      id: 'flex',
+      kicker: 'Pay as you go',
+      name: `${brand} Flex`,
+      price: '$750',
+      tax: '+ GST',
+      per: 'per client, billed only after you’ve met with them',
+      promise: 'No appointment, no charge.',
+      management: {
+        price: '$750',
+        text: 'per month management fee + GST, paid upfront',
+      },
+      includes:
+        'Includes $250 CRM, $250 operations, and $250 client manager and scheduling.',
+    },
+    {
+      id: 'premium',
+      kicker: 'Flat rate',
+      name: `${brand} Premium Advisor`,
+      price: '$4,000',
+      tax: '+ GST',
+      per: 'per month for ongoing client appointments, with no per-client fees',
+      promise: 'Unlimited qualified appointments through rotating allocation.',
+      management: {
+        price: '$999',
+        text: 'per month management fee + GST',
+      },
+      includes:
+        'Includes $250 CRM, $250 operations, and $499 client manager, scheduling, and personal follow-up. We chase the client so you never have to.',
+      total:
+        '$4,999 per month all-in, plus GST. Founding rate, first 20 advisors only.',
+      featured: true,
+    },
+  ] satisfies FeePlan[],
 }
 
 export const who = {

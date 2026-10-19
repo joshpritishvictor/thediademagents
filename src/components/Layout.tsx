@@ -1,5 +1,5 @@
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useLocation, useOutlet } from 'react-router-dom'
 import { easeOutExpo } from '../lib/motion'
 import { preloadRoute } from '../routes'
@@ -78,6 +78,8 @@ export default function Layout() {
   const { pathname, hash } = useLocation()
   // useOutlet (not <Outlet />) so the old page stays rendered while it animates out
   const outlet = useOutlet()
+  // The page the visitor arrived on: it is already on screen (pre-rendered), so it does not slide in
+  const [firstPath] = useState(pathname)
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
   usePreloadOnIntent()
@@ -100,10 +102,17 @@ export default function Layout() {
 
       {/* Outside AnimatePresence so navigation keeps the current page visible while the next one loads */}
       <Suspense fallback={<div className="min-h-screen flex-1 bg-brand-950" />}>
-        {/* initial={false}: the first (pre-rendered) page is visible without waiting for JS */}
+        {/*
+         * Motion writes each element's hidden start state as inline styles, and
+         * AnimatePresence's `initial` switches that on for everything inside it.
+         * Off on the server, so the pre-rendered HTML is fully visible before the
+         * script loads; on in the browser, so entrances and scroll reveals start
+         * hidden and actually animate (otherwise they are already visible by the
+         * time they come into view and nothing appears to happen).
+         */}
         <AnimatePresence
           mode="wait"
-          initial={false}
+          initial={typeof window !== 'undefined'}
           onExitComplete={() => {
             if (!hash) window.scrollTo(0, 0)
           }}
@@ -112,7 +121,11 @@ export default function Layout() {
             id="main"
             key={pathname}
             className="flex-1"
-            initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
+            initial={
+              pathname === firstPath
+                ? false
+                : { opacity: 0, y: 24, filter: 'blur(6px)' }
+            }
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: -16, filter: 'blur(6px)' }}
             transition={{ duration: 0.5, ease: easeOutExpo }}

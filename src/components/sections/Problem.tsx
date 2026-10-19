@@ -1,6 +1,5 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { m, useReducedMotion } from 'motion/react'
-import { useEffect, useId, useState } from 'react'
+import { m, useReducedMotion, type PanInfo } from 'motion/react'
+import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 import { problem } from '../../content/advisors'
 import { easeOutExpo } from '../../lib/motion'
 import Reveal from '../Reveal'
@@ -10,17 +9,18 @@ const CYCLE_MS = 7000
 
 export default function Problem() {
   return (
-    <section className="relative overflow-hidden bg-brand-950 section-y text-on-dark">
+    <section className="relative flex flex-col overflow-hidden bg-brand-950 py-14 text-on-dark lg:min-h-[calc(100svh-var(--snap-top))] lg:py-10">
       <div className="glow-soft" aria-hidden="true" />
 
-      <div className="relative container-page">
+      {/* Fills one screen below the header, content centred, so the whole block is in view when snapped to */}
+      <div className="relative container-page lg:my-auto">
         <SectionHeading
           title={[problem.heading[0], problem.heading[1]]}
           align="center"
           light
         />
 
-        <Reveal className="mt-10 lg:mt-12" delay={0.15}>
+        <Reveal className="mt-6 lg:mt-8" delay={0.15}>
           <ObjectionCarousel />
         </Reveal>
       </div>
@@ -52,6 +52,20 @@ function ObjectionCarousel() {
 
   const go = (i: number) => setActive((i + count) % count)
 
+  // A swipe (or mouse drag) moves one slide in the direction of the gesture
+  const onSwipe = (_: unknown, { offset, velocity }: PanInfo) => {
+    if (offset.x < -40 || velocity.x < -300) go(active + 1)
+    else if (offset.x > 40 || velocity.x > 300) go(active - 1)
+  }
+
+  // Arrow keys work while anything inside the carousel (a slide dot) has focus
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowRight') go(active + 1)
+    else if (event.key === 'ArrowLeft') go(active - 1)
+    else return
+    event.preventDefault()
+  }
+
   return (
     <div
       role="group"
@@ -62,8 +76,22 @@ function ObjectionCarousel() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onKeyDown={onKeyDown}
     >
-      <div className="overflow-hidden">
+      {/*
+       * The drag layer gives a little elastic pull under the finger and snaps
+       * back; the track inside it does the actual move to the chosen slide.
+       * Vertical panning is left to the page so the carousel never traps scrolling.
+       */}
+      <m.div
+        className="cursor-grab touch-pan-y overflow-hidden select-none active:cursor-grabbing"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        dragSnapToOrigin
+        onDragStart={() => setPaused(true)}
+        onDragEnd={onSwipe}
+      >
         {/* All slides stay in the DOM (and the pre-rendered HTML); the track slides between them */}
         <m.div
           className="flex"
@@ -85,11 +113,11 @@ function ObjectionCarousel() {
                 aria-label={`${i + 1} of ${count}: ${title}`}
                 aria-hidden={!current}
                 inert={!current}
-                className="w-full shrink-0 px-2 py-4 text-center sm:px-6 md:px-10"
+                className="w-full shrink-0 px-2 py-2 text-center sm:px-6 md:px-10"
               >
                 <p className="eyebrow text-gold-400">{eyebrow}</p>
                 <figure className="mt-5">
-                  <blockquote className="mx-auto max-w-4xl font-display text-2xl leading-snug text-gold-300 italic md:text-[2rem]">
+                  <blockquote className="mx-auto max-w-4xl font-display text-2xl leading-snug text-gold-300 italic md:text-[1.75rem]">
                     “{quote}”
                   </blockquote>
                   <figcaption className="mt-5 font-sans text-[0.66rem] font-bold tracking-[0.2em] text-on-dark/55 uppercase">
@@ -97,7 +125,7 @@ function ObjectionCarousel() {
                     {tagline}
                   </figcaption>
                 </figure>
-                <div className="mx-auto mt-8 max-w-2xl">
+                <div className="mx-auto mt-6 max-w-2xl">
                   <p className="eyebrow text-gold-400">{problem.answerLabel}</p>
                   <p className="mt-3 text-on-dark/75">{answer}</p>
                 </div>
@@ -105,9 +133,9 @@ function ObjectionCarousel() {
             )
           })}
         </m.div>
-      </div>
+      </m.div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4">
+      <div className="mt-8 flex items-center justify-center px-4">
         <div className="flex items-center gap-2" aria-label="Choose a slide">
           {slides.map(({ title }, i) => {
             const current = i === active
@@ -130,32 +158,6 @@ function ObjectionCarousel() {
               </button>
             )
           })}
-        </div>
-
-        <div className="flex items-center gap-4">
-          <span className="font-display text-sm text-on-dark/50 italic">
-            {String(active + 1).padStart(2, '0')}
-            <span className="mx-1.5 text-on-dark/30">/</span>
-            {String(count).padStart(2, '0')}
-          </span>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => go(active - 1)}
-              aria-label="Previous objection"
-              className="grid size-9 place-items-center border border-on-dark/25 text-on-dark/70 transition-colors hover:border-gold-500 hover:text-gold-400"
-            >
-              <ChevronLeft size={16} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(active + 1)}
-              aria-label="Next objection"
-              className="grid size-9 place-items-center border border-on-dark/25 text-on-dark/70 transition-colors hover:border-gold-500 hover:text-gold-400"
-            >
-              <ChevronRight size={16} aria-hidden="true" />
-            </button>
-          </div>
         </div>
       </div>
     </div>

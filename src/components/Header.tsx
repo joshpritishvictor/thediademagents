@@ -7,7 +7,7 @@ import {
 } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { applyLink, navLinks, site } from '../content/site'
+import { applyLink, navLinks, site, solidHeaderPaths } from '../content/site'
 import { easeOutExpo } from '../lib/motion'
 import Logo from './Logo'
 
@@ -107,7 +107,8 @@ export default function Header() {
   useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 24))
 
   // Every page opens on a dark hero: the bar starts as a hairline and becomes solid navy once scrolled
-  const solid = scrolled || menuOpen
+  // Every page but the light ones opens on a dark hero: the bar starts as a hairline and becomes solid navy once scrolled
+  const solid = scrolled || menuOpen || solidHeaderPaths.includes(pathname)
 
   return (
     <header
@@ -119,7 +120,7 @@ export default function Header() {
       }`}
     >
       <div className="container-page flex h-[4.25rem] items-center justify-between gap-4 md:h-[4.5rem] lg:gap-6">
-        <Logo light />
+        <Logo light withTag={false} />
 
         <nav
           aria-label="Main"

@@ -57,9 +57,13 @@ export const site = {
 }
 
 /** Main navigation: the home page sections in order, then the other pages */
+/** Pages that open on a light background, where the header must be solid from the top */
+export const solidHeaderPaths = ['/process/']
+
 export const navLinks = [
-  { to: '/#disc', label: 'D.I.S.C.' },
-  { to: '/#services', label: 'Services' },
+  { to: '/', label: 'Home' },
+  { to: '/process/', label: 'Our Process' },
+  { to: '/services/', label: 'Services' },
   { to: '/#who', label: 'Who Thrives' },
   { to: '/about/', label: 'About Us' },
 ]
