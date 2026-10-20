@@ -2,7 +2,7 @@
 interface ImportMetaEnv {
   /** One-word brand used throughout the copy, e.g. "Diadem" */
   readonly VITE_BRAND?: string
-  /** Trading name, e.g. "Diadem & Co" */
+  /** Trading name, e.g. "The Diadem Family" */
   readonly VITE_SITE_NAME?: string
   readonly VITE_LEGAL_NAME?: string
   readonly VITE_TAGLINE?: string

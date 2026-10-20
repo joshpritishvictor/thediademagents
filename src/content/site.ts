@@ -25,11 +25,11 @@ const mainSiteUrl = trimSlash(
 const shortName = read('VITE_BRAND', 'Diadem')
 
 export const site = {
-  /** Trading name, e.g. "Diadem & Co" */
-  name: read('VITE_SITE_NAME', `${shortName} & Co`),
+  /** Trading name, e.g. "The Diadem Family" */
+  name: read('VITE_SITE_NAME', `The ${shortName} Family`),
   /** The one-word brand used throughout the copy */
   shortName,
-  legalName: read('VITE_LEGAL_NAME', 'Diadem Strategies Incorporated'),
+  legalName: read('VITE_LEGAL_NAME', 'Diadem Strategies Inc.'),
   tagline: read('VITE_TAGLINE', 'Your Financial Ecosystem, Unified'),
   description: read(
     'VITE_SITE_DESCRIPTION',
@@ -43,7 +43,7 @@ export const site = {
   contact: {
     phone,
     phoneHref: telHref(phone),
-    email: read('VITE_CONTACT_EMAIL', 'contactus@diadem.co'),
+    email: read('VITE_CONTACT_EMAIL', 'contact@thediademfamily.com'),
   },
   logo: {
     /** Public URLs (e.g. "/brand/logo.svg"); empty means the bundled Diadem logos */
