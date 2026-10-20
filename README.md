@@ -1,6 +1,6 @@
-# Diadem for Insurance Advisors
+# The Diadem Family for Insurance Advisors
 
-The advisor-facing site for Diadem & Co: a landing page explaining the advisor
+The advisor-facing site for The Diadem Family: a landing page explaining the advisor
 programme (D.I.S.C. intake, the six-step process, Flex and Premium services) and
 an application form that saves to GoHighLevel.
 
@@ -65,6 +65,13 @@ with the Diadem values as defaults (see `.env.example` for the full list):
 Put them in `.env.local` for development and in the Cloudflare Pages project
 variables for deploys; a change needs a rebuild. Favicons are the files in
 `public/`.
+
+The bundled logo files in `src/assets/images/` are SVG tracings of The Diadem
+Family crown logo (vectorized with vtracer from the original artwork, white
+background removed, then refilled with one gold gradient and flat brown):
+`logo-diadem.svg` and `logo-diadem-dark.svg` (crown above the name, used in
+the header and footer) and `logo-mark.svg` (the crown alone, at the centre of
+the hero orbit). The `-dark` files use brighter gold stops for navy backgrounds.
 
 ## Colours
 

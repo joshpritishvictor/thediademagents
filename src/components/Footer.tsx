@@ -19,8 +19,8 @@ export default function Footer() {
     <footer className="relative border-t border-gold-500/25 bg-brand-950 text-on-dark">
       <div className="container-page grid gap-12 py-14 sm:grid-cols-2 md:py-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-4">
-          <Logo light />
-          <p className="mt-5 max-w-xs font-display text-xl text-on-dark/80 italic">
+          <Logo light withTag={false} className="h-28 w-auto sm:h-32" />
+          <p className="mt-6 max-w-xs font-display text-xl text-on-dark/80 italic">
             {site.tagline}
           </p>
           <Link to={applyLink.to} className="btn-gold mt-8">

@@ -3,13 +3,18 @@ import bundledLogo from '../assets/images/logo-diadem.svg'
 import bundledLogoDark from '../assets/images/logo-diadem-dark.svg'
 import { site } from '../content/site'
 
-/** The wordmark, optionally with its small tag beside it; `light` is the version for dark backgrounds */
+/** Intrinsic size of the bundled files (crown above the name), so the layout holds while they load */
+const size = { width: 1194, height: 880 }
+
+/** The logo, optionally with its small tag beside it; `light` is the version for dark backgrounds */
 export default function Logo({
   light = false,
   withTag = true,
+  className = 'h-14 w-auto md:h-[3.75rem]',
 }: {
   light?: boolean
   withTag?: boolean
+  className?: string
 }) {
   const custom = light ? site.logo.onDark : site.logo.onLight
   const src = custom || (light ? bundledLogoDark : bundledLogo)
@@ -19,14 +24,13 @@ export default function Logo({
     <Link
       to="/"
       className="flex items-center gap-3"
-      aria-label={`${site.shortName} for Insurance Advisors, home`}
+      aria-label={`${site.name} for Insurance Advisors, home`}
     >
       <img
         src={src}
-        alt={site.shortName}
-        // Intrinsic size of the bundled logo keeps the layout stable while it loads
-        {...(!custom && { width: 212, height: 64 })}
-        className="h-11 w-auto sm:h-12"
+        alt={site.name}
+        {...(!custom && size)}
+        className={className}
       />
       {tag && (
         <span
