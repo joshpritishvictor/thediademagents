@@ -4,7 +4,7 @@ import bundledLogoDark from '../assets/images/logo-diadem-dark.svg'
 import { site } from '../content/site'
 
 /** Intrinsic size of the bundled files (crown above the name), so the layout holds while they load */
-const size = { width: 1194, height: 880 }
+const size = { width: 1194, height: 552 }
 
 /** The logo, optionally with its small tag beside it; `light` is the version for dark backgrounds */
 export default function Logo({
