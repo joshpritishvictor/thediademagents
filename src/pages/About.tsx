@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import OrbitMark from '../components/OrbitMark'
 import Reveal, { RevealItem } from '../components/Reveal'
 import SectionHeading from '../components/SectionHeading'
-import FinalCta from '../components/sections/FinalCta'
 import Seo from '../components/Seo'
 import { about } from '../content/about'
 import { applyLink, cta, site } from '../content/site'
@@ -19,8 +18,8 @@ export default function About() {
         description={`${about.body} No commission splitting, ever.`}
       />
 
-      <section className="relative overflow-hidden bg-brand-950 pt-36 pb-20 text-on-dark md:pt-44 md:pb-28">
-        <div className="glow-soft" aria-hidden="true" />
+      {/* The page opens on a light section, like Services, so its top padding clears the solid header */}
+      <section className="relative overflow-hidden bg-surface pt-28 pb-20 md:pt-36 md:pb-24">
         <div className="relative container-page grid items-center gap-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <m.div
@@ -29,10 +28,10 @@ export default function About() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <p className="eyebrow text-gold-400">{about.eyebrow}</p>
+              <p className="eyebrow">{about.eyebrow}</p>
             </m.div>
             <m.h1
-              className="mt-8 display-xl text-on-dark"
+              className="mt-6 display-page text-brand-950"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.1, ease: easeOutExpo }}
@@ -42,7 +41,7 @@ export default function About() {
               <em className="accent">{about.heading[1]}</em>
             </m.h1>
             <m.p
-              className="mt-8 max-w-xl text-lg text-on-dark/70 md:text-xl"
+              className="mt-6 max-w-xl text-lg text-ink-muted md:text-xl"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: easeOutExpo }}
@@ -63,7 +62,7 @@ export default function About() {
       </section>
 
       {/* The four seats */}
-      <section className="bg-surface section-y">
+      <section className="border-t border-ink/10 bg-surface-alt section-y">
         <div className="container-page">
           <SectionHeading
             eyebrow={table.eyebrow}
@@ -100,26 +99,26 @@ export default function About() {
       </section>
 
       {/* The promise: no commission splitting */}
-      <section className="bg-surface-alt section-y">
+      <section className="bg-surface section-y">
         <Reveal className="container-page">
-          <div className="panel-dark grid gap-10 p-8 text-on-dark md:p-12 lg:grid-cols-12 lg:gap-14 lg:p-16">
+          <div className="panel grid gap-10 p-8 md:p-12 lg:grid-cols-12 lg:gap-14 lg:p-16">
             <div className="lg:col-span-5">
-              <p className="eyebrow text-gold-400">{promise.eyebrow}</p>
-              <p className="mt-8 font-display text-[6rem] leading-none text-gold-400 md:text-[8rem]">
+              <p className="eyebrow">{promise.eyebrow}</p>
+              <p className="mt-8 font-display text-[6rem] leading-none text-gold-500 md:text-[8rem]">
                 {promise.note.value}
               </p>
-              <p className="mt-3 font-sans text-[0.72rem] font-bold tracking-[0.3em] text-on-dark/60 uppercase">
+              <p className="mt-3 font-sans text-[0.72rem] font-bold tracking-[0.3em] text-ink-muted uppercase">
                 {promise.note.label}
               </p>
             </div>
 
-            <div className="lg:col-span-7 lg:border-l lg:border-gold-500/20 lg:pl-14">
-              <h2 className="display-md text-on-dark">
+            <div className="lg:col-span-7 lg:border-l lg:border-gold-500/30 lg:pl-14">
+              <h2 className="display-lg text-brand-950">
                 {promise.heading[0]}
                 <br />
                 <em className="accent">{promise.heading[1]}</em>
               </h2>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-on-dark/70">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted">
                 {promise.body}
               </p>
               <ul className="mt-8 grid gap-3">
@@ -128,7 +127,7 @@ export default function About() {
                     <span className="mt-0.5 grid size-5 shrink-0 place-items-center bg-gold-500 text-brand-950">
                       <Check size={12} strokeWidth={3} aria-hidden="true" />
                     </span>
-                    <span className="text-on-dark/80">{point}</span>
+                    <span className="text-ink">{point}</span>
                   </li>
                 ))}
               </ul>
@@ -137,7 +136,7 @@ export default function About() {
                   <span>{cta.apply}</span>
                   <ArrowRight size={16} aria-hidden="true" />
                 </Link>
-                <Link to="/services/" className="btn-outline text-on-dark">
+                <Link to="/services/" className="btn-outline text-brand-950">
                   <span>See {site.shortName} pricing</span>
                 </Link>
               </div>
@@ -145,8 +144,6 @@ export default function About() {
           </div>
         </Reveal>
       </section>
-
-      <FinalCta />
     </>
   )
 }

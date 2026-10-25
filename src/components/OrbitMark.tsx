@@ -2,12 +2,15 @@ import { m } from 'motion/react'
 import bundledMark from '../assets/images/logo-mark.svg'
 import { site } from '../content/site'
 import { easeOutExpo } from '../lib/motion'
+import CrownDraw from './CrownDraw'
 import LottieScene from './LottieScene'
 
 type OrbitMarkProps = {
   className?: string
   /** Seconds before the brand mark lands in the centre */
   logoDelay?: number
+  /** Draw the crown in when it scrolls into view, instead of popping it in on load */
+  formCrown?: boolean
 }
 
 /**
@@ -18,7 +21,11 @@ type OrbitMarkProps = {
 export default function OrbitMark({
   className = '',
   logoDelay = 1.3,
+  formCrown = false,
 }: OrbitMarkProps) {
+  const markClass =
+    'pointer-events-none absolute top-1/2 left-1/2 h-[46%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_6px_18px_rgb(0_0_0/0.45)]'
+
   return (
     <div className={`relative aspect-square ${className}`}>
       <div className="halo" aria-hidden="true" />
@@ -28,15 +35,20 @@ export default function OrbitMark({
         className="h-full w-full"
         poster={<TablePoster />}
       />
-      <m.img
-        src={site.logo.mark || bundledMark}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 h-[46%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_6px_18px_rgb(0_0_0/0.45)]"
-        initial={{ opacity: 0, scale: 0.4 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, delay: logoDelay, ease: easeOutExpo }}
-      />
+      {/* A custom mark can't be traced, so it pops in like the default */}
+      {formCrown && !site.logo.mark ? (
+        <CrownDraw className={markClass} />
+      ) : (
+        <m.img
+          src={site.logo.mark || bundledMark}
+          alt=""
+          aria-hidden="true"
+          className={markClass}
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: logoDelay, ease: easeOutExpo }}
+        />
+      )}
     </div>
   )
 }

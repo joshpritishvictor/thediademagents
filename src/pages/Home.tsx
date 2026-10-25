@@ -1,12 +1,8 @@
 import Seo from '../components/Seo'
 import Benefits from '../components/sections/Benefits'
 import Disc from '../components/sections/Disc'
-import FinalCta from '../components/sections/FinalCta'
 import Hero from '../components/sections/Hero'
 import Problem from '../components/sections/Problem'
-import Process from '../components/sections/Process'
-import Testimonials from '../components/sections/Testimonials'
-import Who from '../components/sections/Who'
 import { pricing } from '../content/advisors'
 import { site } from '../content/site'
 
@@ -42,10 +38,6 @@ export default function Home() {
       <Disc />
       <Problem />
       <Benefits />
-      <Process />
-      <Who />
-      <Testimonials />
-      <FinalCta />
     </>
   )
 }

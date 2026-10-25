@@ -1,7 +1,5 @@
 import { m } from 'motion/react'
 import FeePanels from '../components/FeePanels'
-import Reveal from '../components/Reveal'
-import FinalCta from '../components/sections/FinalCta'
 import Seo from '../components/Seo'
 import { pricing } from '../content/advisors'
 import { site } from '../content/site'
@@ -51,7 +49,7 @@ export default function Services() {
             {pricing.eyebrow}
           </m.p>
           <m.h1
-            className="mt-6 font-display text-[clamp(2.25rem,3.6vw,3.5rem)] leading-[1.05] font-medium text-brand-950 lg:whitespace-nowrap"
+            className="mt-6 display-page text-brand-950 lg:whitespace-nowrap"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: easeOutExpo }}
@@ -71,16 +69,8 @@ export default function Services() {
           <div className="mt-14 lg:mt-16">
             <FeePanels delay={0.45} />
           </div>
-
-          <Reveal>
-            <p className="mx-auto mt-12 max-w-4xl border-t border-ink/10 pt-6 font-sans text-xs leading-relaxed text-ink/50">
-              {pricing.disclaimer}
-            </p>
-          </Reveal>
         </div>
       </section>
-
-      <FinalCta />
     </>
   )
 }
