@@ -33,7 +33,7 @@ export const site = {
   tagline: read('VITE_TAGLINE', 'Your Financial Ecosystem, Unified'),
   description: read(
     'VITE_SITE_DESCRIPTION',
-    `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objection that kills most files never comes up.`,
+    `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objections that kills most files never comes up.`,
   ),
   /** Canonical origin of this site, used for canonical links, Open Graph and the sitemap */
   url: trimSlash(read('VITE_SITE_URL', 'https://advisors.thediadem.ca')),
@@ -78,6 +78,8 @@ export const applyLink = { to: '/apply/', label: 'Apply as an Advisor' }
 /** Labels used for every call-to-action on the site */
 export const cta = {
   apply: 'Apply as an Advisor',
+  /** The home page hero's button */
+  startDisc: 'Start with D.I.S.C.',
   applyPremium: `Apply as a ${shortName} Premium Advisor`,
   exploreFlex: `Explore ${shortName} Flex`,
   introCall: 'Schedule a 20-Minute Introduction Call',

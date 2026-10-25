@@ -1,9 +1,8 @@
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { m } from 'motion/react'
 import { Fragment } from 'react'
-import { Link } from 'react-router-dom'
 import { hero } from '../../content/advisors'
-import { applyLink, cta } from '../../content/site'
+import { cta } from '../../content/site'
 import { easeOutExpo } from '../../lib/motion'
 import heroBg from '../../assets/images/hero-boardroom.jpg'
 
@@ -77,10 +76,11 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.95, ease: easeOutExpo }}
           >
-            <Link to={applyLink.to} className="btn-gold">
-              <span>{cta.apply}</span>
+            {/* Down to the D.I.S.C. section, like the scroll cue */}
+            <a href="#disc" className="btn-gold">
+              <span>{cta.startDisc}</span>
               <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </a>
           </m.div>
         </div>
 
