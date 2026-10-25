@@ -31,12 +31,16 @@
   --font-display:
     'Playfair Display Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Manrope Variable', system-ui, 'Segoe UI', sans-serif;
+  /* Display numerals (the Premium spots count): Roman inscriptional capitals, even-height digits */
+  --font-numeral: 'Cinzel Variable', 'Playfair Display Variable', Georgia, serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   --animate-marquee: marquee 38s linear infinite;
   --animate-nudge: nudge 1.6s ease-in-out infinite;
   --animate-sweep: sweep 2.8s ease-in-out infinite;
+  --animate-shine: shine 4.5s ease-in-out infinite;
+  --animate-gleam: gleam 5s ease-in-out infinite;
 
   @keyframes marquee {
     to {
@@ -50,6 +54,27 @@
     }
     50% {
       transform: translateY(3px);
+    }
+  }
+  /* A shine sweeping through gradient text, then a pause before the next */
+  @keyframes gleam {
+    0%,
+    30% {
+      background-position: 100% 0;
+    }
+    70%,
+    100% {
+      background-position: 0% 0;
+    }
+  }
+  /* A glint crossing a button, then a pause before the next */
+  @keyframes shine {
+    0% {
+      transform: translateX(-120%) skewX(-20deg);
+    }
+    35%,
+    100% {
+      transform: translateX(320%) skewX(-20deg);
     }
   }
   /* A light band travelling along a hairline */
@@ -83,6 +108,17 @@
   @media (min-width: 48rem) {
     html {
       --header-h: calc(4.5rem + 1px);
+    }
+  }
+  /*
+   * Wide screens: everything is sized in rem, so growing the root size from
+   * 16px at 1440px wide scales the whole layout (type, spacing and the
+   * 82.5rem content width) with the viewport instead of leaving wide empty
+   * margins. Capped at 24px (reached at ~2160px wide).
+   */
+  @media (min-width: 90rem) {
+    html {
+      font-size: clamp(100%, 1.1111vw, 150%);
     }
   }
   body {
@@ -125,7 +161,7 @@
 /* ---- Layout ---------------------------------------------------------------- */
 
 @utility container-page {
-  @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
+  @apply mx-auto w-full max-w-[82.5rem] px-5 sm:px-8 lg:px-12;
 }
 
 @utility section-y {
@@ -143,6 +179,10 @@
 @utility display-xl {
   @apply font-display text-[clamp(2.5rem,5.4vw,5.25rem)] leading-[1.02] font-medium;
 }
+/* Page title on the light inner pages (Services, About, Who Thrives) */
+@utility display-page {
+  @apply font-display text-[clamp(2.25rem,3.6vw,3.5rem)] leading-[1.05] font-medium;
+}
 @utility display-lg {
   @apply font-display text-[2.0625rem] leading-[1.15] font-medium;
 }
@@ -150,9 +190,9 @@
   @apply font-display text-[clamp(1.6rem,2.6vw,2.25rem)] leading-[1.15] font-medium;
 }
 
-/* The italic gold phrase inside a heading */
+/* The italic gold phrase inside a heading, a touch smaller than the words around it (sized relative to its heading, so it scales with every heading size) */
 @utility accent {
-  @apply font-display text-gold-500 italic;
+  @apply font-display text-[0.88em] text-gold-500 italic;
 }
 
 /* Hairlines */

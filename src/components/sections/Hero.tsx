@@ -5,19 +5,27 @@ import { Link } from 'react-router-dom'
 import { hero } from '../../content/advisors'
 import { applyLink, cta } from '../../content/site'
 import { easeOutExpo } from '../../lib/motion'
-import OrbitMark from '../OrbitMark'
+import heroBg from '../../assets/images/hero-boardroom.jpg'
 
 export default function Hero() {
   return (
     <section className="hero relative flex flex-col overflow-hidden bg-brand-950 text-on-dark lg:min-h-svh">
+      <img
+        src={heroBg}
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        decoding="async"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[70%_center]"
+      />
+      {/* Navy wash so the copy on the left stays legible over the photo */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-linear-to-r from-brand-950/85 via-brand-950/45 to-brand-950/10"
+        aria-hidden="true"
+      />
       <div className="glow-soft" aria-hidden="true" />
 
-      {/*
-       * The copy on the left and the orbit on the right, vertically centred on
-       * each other and the block centred in the hero. On desktop the orbit
-       * ring is as wide as the header's Apply button and ends on the same
-       * right edge.
-       */}
+      {/* The copy on the left, the block vertically centred in the hero */}
       <div className="hero-stage relative container-page grid items-center gap-10 pt-28 pb-14 md:pt-36 lg:flex-1 lg:grid-cols-12 lg:content-center lg:gap-12 lg:pt-28 lg:pb-24">
         <div className="@container lg:col-span-7">
           <m.div
@@ -75,16 +83,6 @@ export default function Hero() {
             </Link>
           </m.div>
         </div>
-
-        <m.div
-          // The ring fills 84% of its frame (8% inset each side): the frame is sized so the ring matches --apply-w (the header's Apply button, 13.25rem until measured), and shifted right by the inset so the ring, not the frame, meets the right edge
-          className="hero-orbit mx-auto w-full max-w-[18rem] sm:max-w-[22rem] lg:col-span-5 lg:mx-0 lg:w-[calc(var(--apply-w,13.25rem)/0.84)] lg:max-w-none lg:translate-x-[8%] lg:justify-self-end"
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.5, ease: easeOutExpo }}
-        >
-          <OrbitMark className="w-full" />
-        </m.div>
 
         {/* Scroll cue: desktop only, where the hero fills the screen */}
         <m.a

@@ -2,7 +2,6 @@ import { m, useScroll, useSpring, type TargetAndTransition } from 'motion/react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { ChannelChip } from '../components/ChannelIcon'
 import SectionHeading from '../components/SectionHeading'
-import FinalCta from '../components/sections/FinalCta'
 import Seo from '../components/Seo'
 import { solution } from '../content/advisors'
 import { easeOutExpo } from '../lib/motion'
@@ -14,8 +13,6 @@ export default function Process() {
       <Seo title="Our Process" description={solution.body} />
 
       <Steps />
-
-      <FinalCta />
     </>
   )
 }

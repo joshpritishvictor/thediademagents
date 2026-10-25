@@ -292,9 +292,8 @@ export const solution = {
           plans: premium,
         },
         {
-          lead: 'Dedicated follow-up support',
-          text: 'to keep prospective clients engaged after their meetings',
-          plans: premium,
+          text: 'Dedicated follow-up support to keep prospective clients engaged after their meetings',
+          plans: both,
         },
         {
           lead: 'Priority access to reassigned clients:',
@@ -308,7 +307,7 @@ export const solution = {
       items: [
         {
           lead: 'Senior Advisor Partnership:',
-          text: 'co-advise with an experienced advisor on eligible cases, under a 50/50 commission split agreed between the two licensed advisors',
+          text: 'co-advise with an experienced advisor on eligible cases.',
           plans: premium,
         },
         {
@@ -358,9 +357,9 @@ export const pricing = {
       label: `${brand}`,
       name: 'Flex',
       tagline: 'Qualified Appointments. Greater Flexibility.',
-      price: '$750',
+      price: '$999',
       period: 'per month management fee',
-      note: '+ $750 per qualified, attended appointment',
+      note: '+ $800 per qualified, attended appointment',
       features: [
         'Targeted digital client acquisition campaigns',
         'Personal prospect engagement and qualification',
@@ -406,18 +405,14 @@ export type FeePlan = {
   /** Billing model, e.g. "Pay as you go" */
   kicker: string
   name: string
-  /** How many clients the service covers */
-  clients: string
   /** The headline fee and what it is charged per */
   price: string
   tax: string
   per: string
-  /** The one-line promise under the fee */
+  /** The one-line promise under the fee: how many clients the service covers */
   promise: string
-  /** The management fee on top */
-  management: { price: string; text: string }
-  /** What the management fee covers */
-  includes: string
+  /** An optional footnote, shown smaller at the end of the promise's line */
+  promiseNote?: string
   /** Optional all-in total line */
   total?: string
   /** A plan whose features this one includes; they are summed up in one line rather than repeated */
@@ -430,38 +425,40 @@ export const fees = {
   includedLabel: 'What’s included',
   /** The one line that stands in for an inherited plan's features, e.g. "Everything in Diadem Flex" */
   everythingIn: (name: string) => `Everything in ${name}`,
+  /** The management fee, the same on both services, and what it covers */
+  management: {
+    label: 'One management fee, both plans',
+    price: 'CAD 999',
+    text: 'per month + GST',
+    parts: [
+      { price: '$ 250', label: 'CRM' },
+      { price: '$ 250', label: 'Operations' },
+      {
+        price: '$ 499',
+        label: 'Client manager, scheduling, and personal follow-up',
+      },
+    ],
+    promise: 'We chase the client so you never have to.',
+  },
   plans: [
     {
       id: 'flex',
       kicker: 'Pay as you go',
       name: `${brand} Flex`,
-      clients: 'You choose how many clients you take on',
       price: 'CAD 750',
       tax: '+ GST',
       per: 'per client, billed only after you’ve met with them',
-      promise: 'No appointment, no charge.',
-      management: {
-        price: 'CAD 750',
-        text: 'per month management fee + GST, paid upfront',
-      },
-      includes:
-        'Includes CAD 250 CRM, CAD 250 operations, and CAD 250 client manager and scheduling.',
+      promise: 'You choose how many clients you take on',
     },
     {
       id: 'premium',
       kicker: 'Flat rate',
       name: `${brand} Premium Advisor`,
-      clients: 'Unlimited clients',
       price: 'CAD 4,000',
       tax: '+ GST',
       per: 'per month for ongoing client appointments, with no per-client fees',
-      promise: 'Unlimited qualified appointments through rotating allocation.',
-      management: {
-        price: 'CAD 999',
-        text: 'per month management fee + GST',
-      },
-      includes:
-        'Includes CAD 250 CRM, CAD 250 operations, and CAD 499 client manager, scheduling, and personal follow-up. We chase the client so you never have to.',
+      promise: 'Minimum 6 clients, no maximum',
+      promiseNote: '*Based on client acquisition and rotation',
       total:
         'CAD 4,999 per month all-in, plus GST. Founding rate, first 20 advisors only.',
       inherits: 'flex',
@@ -473,34 +470,49 @@ export const fees = {
 export const who = {
   eyebrow: `Who Thrives With ${brand}`,
   heading: ['The advisors who get the most from', `${brand}`],
-  intro: `${brand} works best for advisors who are ready to spend less time chasing leads and more time doing what they’re best at: building relationships and providing meaningful advice to business owners who need it.`,
+  intro: `${brand} works best for advisors who are ready to spend less time chasing leads and more time doing what they’re best at building relationships and providing meaningful advice to business owners who need it.`,
+  profile: {
+    eyebrow: 'The profile',
+    heading: ['What the advisors who thrive', 'have in common.'],
+  },
   traits: [
     {
       icon: BadgeCheck,
+      label: 'Licensed',
       title: 'You’re licensed and active in Alberta',
       body: 'You hold an appropriate insurance licence in Alberta and are in good standing, ready to engage clients professionally from day one.',
     },
     {
       icon: Briefcase,
+      label: 'Business Owners',
       title: 'Business owners are your sweet spot',
       body: 'You understand incorporated business owners and the unique corporate planning considerations they face, or you’re ready to make them your focus.',
     },
     {
       icon: Handshake,
+      label: 'Collaboration',
       title: 'You enjoy collaborative meetings',
       body: 'Having an accountant and lawyer at the table energizes you. You see it as a better client experience, not competition.',
     },
     {
       icon: Star,
+      label: 'Client First',
       title: 'You lead with the client’s interests',
       body: 'You give advice you’d give your own family. Long-term relationships matter more to you than short-term close rates.',
     },
     {
       icon: CalendarCheck,
+      label: 'Follow-Through',
       title: 'You show up and follow through',
-      body: 'You attend your scheduled meetings, follow up thoughtfully, and take the time to serve clients properly, not just get signatures.',
+      body: 'You attend your scheduled meetings, follow up with us thoughtfully, and take the time to serve clients properly, not just get signatures.',
     },
-  ] satisfies { icon: LucideIcon; title: string; body: string }[],
+  ] satisfies {
+    icon: LucideIcon
+    /** A word or two, shown on the trait's collapsed panel */
+    label: string
+    title: string
+    body: string
+  }[],
   aside: {
     heading: ['We Build the Connections.', 'You Build the Relationships.'],
     paragraphs: [
@@ -510,7 +522,7 @@ export const who = {
     ],
     founding: {
       title: `${brand} Premium Advisor Spots: Limited Availability`,
-      body: `The first 20 insurance advisors who enrol in ${brand} Premium receive our ${brand} Premium Advisor rate, locked in for the life of their contract. Once all 20 spots are filled, new enrolments will be at standard rates. These spots will not be re-offered once filled. ${brand} reserves the right to close ${brand} Premium Advisor enrolment at any time.`,
+      body: `The first 20 advisors to enrol lock in the ${brand} Premium Advisor rate for the life of their contract. Once all 20 are filled, new enrolments pay standard rates. These spots will not be re-offered once filled. ${brand} reserves the right to close ${brand} Premium Advisor enrolment at any time.`,
       spots: 20,
       spotsLabel: [`${brand} Premium Advisor`, 'Spots Available'],
     },
@@ -525,11 +537,5 @@ export const testimonials = {
 
 export const finalCta = {
   heading: ['Ready to spend more time', 'advising and less time prospecting?'],
-  body: `Apply to become a ${brand} Advisor or schedule an introduction call to learn more about how our system works.`,
+  body: `Apply to become a ${brand} Advisor and learn more about how our system works.`,
 }
-
-export const disclosure = [
-  `${site.legalName} (operating as ${site.name}) provides marketing, client acquisition, educational, and coordination services only. ${brand} is not an insurance company, insurance agency, accounting firm, law firm, or investment dealer, and does not solicit or sell insurance products, nor does it receive or split insurance commissions. All platform fees cover advertising, administration, and coordination services only.`,
-  `D.I.S.C. (Discovery, Intake, Strategic & Consult) conversations are conducted by ${brand} administrative staff and do not constitute professional financial, insurance, legal, or tax advice. All regulated professional advice and services are provided independently by appropriately licensed professionals who maintain their own professional obligations and regulatory compliance.`,
-  `Participation in a ${brand} service does not establish a legal partnership, employment relationship, or shared ownership. Appointments do not guarantee applications, sales, commissions, or particular financial outcomes. ${brand} reserves the right to close ${brand} Premium Advisor enrolment at any time.`,
-]

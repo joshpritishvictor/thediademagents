@@ -29,6 +29,7 @@ export const routes = [
   { path: '/about/', ...page('About') },
   { path: '/process/', ...page('Process') },
   { path: '/services/', ...page('Services') },
+  { path: '/who-thrives/', ...page('WhoThrives') },
   { path: '/apply/', ...page('Apply') },
   { path: '*', ...page('NotFound') },
 ]

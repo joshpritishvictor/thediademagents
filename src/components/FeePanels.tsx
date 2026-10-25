@@ -15,16 +15,76 @@ import ChannelIcon from './ChannelIcon'
  * these rows (CSS subgrid), so each part of one card sits level with the same
  * part of the other whatever the length of its text.
  */
-const ROWS = 10
+const ROWS = 6
 
-/** The two services side by side as beige cards: fees first, then what each includes */
+/**
+ * The two services side by side as beige cards (fees first, then what each
+ * includes), then the management fee both share, set out once beneath them
+ */
 export default function FeePanels({ delay = 0 }: { delay?: number }) {
   return (
-    <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-0">
-      {fees.plans.map((plan, i) => (
-        <FeePanel key={plan.id} plan={plan} delay={delay + i * 0.12} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-0">
+        {fees.plans.map((plan, i) => (
+          <FeePanel key={plan.id} plan={plan} delay={delay + i * 0.12} />
+        ))}
+      </div>
+      <div className="mt-6">
+        <ManagementBand delay={delay + 0.36} />
+      </div>
+    </>
+  )
+}
+
+/** The shared management fee: the figure and its promise, then what it covers, part by part */
+function ManagementBand({ delay }: { delay: number }) {
+  const { management } = fees
+  return (
+    <m.section
+      className="panel grid gap-6 p-6 md:p-7 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center lg:gap-10"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay, ease: easeOutExpo }}
+      aria-label={management.label}
+    >
+      <div className="lg:border-r lg:border-ink/10 lg:pr-10">
+        <p className="eyebrow">{management.label}</p>
+        <p className="mt-3 flex flex-wrap items-baseline gap-x-3">
+          <span className="font-display text-4xl leading-none text-gold-600 lining-nums md:text-5xl">
+            {management.price}
+          </span>
+          <span className="text-brand-950">{management.text}</span>
+        </p>
+        <p className="mt-2 font-display text-brand-950 italic">
+          {management.promise}
+        </p>
+      </div>
+
+      <div>
+        <ul className="grid gap-3 sm:grid-cols-3">
+          {management.parts.map((part, i) => (
+            <m.li
+              key={part.label}
+              className="rounded-lg border border-gold-500/30 bg-gold-500/10 px-4 py-3"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: delay + 0.2 + i * 0.1,
+                ease: easeOutExpo,
+              }}
+            >
+              <p className="font-display text-xl leading-none text-gold-600 lining-nums">
+                {part.price}
+              </p>
+              <p className="mt-1.5 text-sm leading-snug text-brand-950">
+                {part.label}
+              </p>
+            </m.li>
+          ))}
+        </ul>
+      </div>
+    </m.section>
   )
 }
 
@@ -62,16 +122,7 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
         {plan.name}
       </h2>
 
-      {/* 3: how many clients */}
-      <p className="mt-5 flex items-center gap-3 self-start rounded-lg bg-gold-500/15 px-4 py-2.5 font-sans text-sm font-semibold text-brand-950">
-        <span
-          className="size-1.5 shrink-0 rotate-45 bg-gold-500"
-          aria-hidden="true"
-        />
-        {plan.clients}
-      </p>
-
-      {/* 4–6: the headline fee */}
+      {/* 3–5: the headline fee, what it's charged per, and how many clients */}
       <p className="mt-8 flex flex-wrap items-baseline gap-x-4">
         <span className="font-display text-6xl leading-none text-gold-600 lining-nums md:text-7xl">
           {plan.price}
@@ -81,26 +132,20 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
         </span>
       </p>
       <p className="mt-4 text-lg text-brand-950">{plan.per}</p>
+      {/* Any footnote follows on the same line, smaller */}
       <p className="mt-3 font-sans font-semibold text-gold-600">
         {plan.promise}
+        {plan.promiseNote && (
+          <>
+            {' '}
+            <span className="text-xs font-normal text-ink-muted">
+              {plan.promiseNote}
+            </span>
+          </>
+        )}
       </p>
 
-      {/* 7–9: the management fee on top */}
-      <div className="mt-7 border-t border-ink/10 pt-7">
-        <p className="flex items-baseline gap-x-3">
-          <span className="font-display text-3xl text-gold-600">+</span>
-          <span className="font-display text-4xl leading-none text-gold-600 lining-nums">
-            {plan.management.price}
-          </span>
-        </p>
-        <p className="mt-2 text-brand-950">{plan.management.text}</p>
-      </div>
-      <p className="mt-5 leading-relaxed text-ink-muted">{plan.includes}</p>
-      <p className="mt-3 leading-relaxed font-semibold text-brand-950">
-        {plan.total}
-      </p>
-
-      {/* 10: what the plan includes, grouped by where it happens in the process */}
+      {/* 6: what the plan includes, grouped by where it happens in the process, closing on any all-in total */}
       <div className="mt-7 border-t border-ink/10 pt-7">
         <p className="eyebrow">{fees.includedLabel}</p>
         {inherited && (
@@ -150,6 +195,11 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
             </ul>
           </div>
         ))}
+        {plan.total && (
+          <p className="mt-7 border-t border-ink/10 pt-6 leading-relaxed font-semibold text-brand-950">
+            {plan.total}
+          </p>
+        )}
       </div>
     </m.article>
   )

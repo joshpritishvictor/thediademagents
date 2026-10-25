@@ -1,6 +1,7 @@
 import '@fontsource-variable/manrope'
 import '@fontsource-variable/playfair-display'
 import '@fontsource-variable/playfair-display/wght-italic.css'
+import '@fontsource-variable/cinzel'
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
