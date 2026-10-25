@@ -20,7 +20,7 @@ const brand = site.shortName
 export const hero = {
   eyebrow: 'For Insurance Advisors',
   headline: ['Spend Less Time Prospecting.', 'More Time Advising.'],
-  body: `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objection that kills most files never comes up.`,
+  body: `We handle what happens before the meeting so you can focus on what happens in it. Targeted acquisition, structured qualification, and an independent CPA at the table — so the objections that kill most files never come up.`,
 }
 
 export const disc = {
