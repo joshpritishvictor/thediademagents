@@ -14,7 +14,7 @@ import OrbitMark from './OrbitMark'
 
 const linkClass =
   'link-line font-sans text-sm text-on-dark/65 transition-colors hover:text-on-dark'
-const contactClass = 'inline-flex items-start gap-2.5'
+const contactClass = 'inline-flex items-start gap-2.5 text-left'
 
 export default function Footer() {
   return (
@@ -89,7 +89,7 @@ export default function Footer() {
         </div>
 
         {/* The closing ask, full width under the columns, with the button on the right under Contact */}
-        <div className="mt-10 flex flex-col gap-6 border-t border-on-dark/10 pt-8 md:flex-row md:items-center md:justify-between md:gap-10">
+        <div className="mt-10 flex flex-col gap-6 border-t border-on-dark/10 pt-8 text-center md:flex-row md:items-center md:justify-between md:gap-10 md:text-left">
           <div>
             <h2 className="font-display text-[1.6rem] leading-snug text-on-dark">
               {finalCta.heading[0]}{' '}
@@ -99,7 +99,7 @@ export default function Footer() {
               {finalCta.body}
             </p>
           </div>
-          <Link to={applyLink.to} className="group btn-gold shrink-0 self-start md:self-auto">
+          <Link to={applyLink.to} className="group btn-gold shrink-0 self-center md:self-auto">
             {/* A glint crossing the button every few seconds */}
             <span
               className="pointer-events-none absolute! inset-y-0 left-0 w-1/3 animate-shine bg-gradient-to-r from-transparent via-gold-300/80 to-transparent"
@@ -116,7 +116,7 @@ export default function Footer() {
       </div>
 
       <div>
-        <div className="container-page flex flex-wrap items-center justify-between gap-4 pb-5 font-sans text-[0.68rem] tracking-[0.08em] text-on-dark/45 uppercase">
+        <div className="container-page flex flex-wrap items-center justify-center gap-4 pb-5 text-center font-sans text-[0.68rem] tracking-[0.08em] text-on-dark/45 uppercase sm:justify-between sm:text-left">
           <p>
             &copy; {new Date().getFullYear()} {site.legalName}
           </p>
@@ -143,7 +143,7 @@ function FooterColumn({
   children: ReactNode
 }) {
   return (
-    <div className={className}>
+    <div className={`text-center sm:text-left ${className}`}>
       <p className="eyebrow text-gold-500">{title}</p>
       <ul className="mt-4 space-y-2.5">{children}</ul>
     </div>

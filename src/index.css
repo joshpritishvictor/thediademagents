@@ -123,6 +123,13 @@
   }
   body {
     @apply bg-surface font-sans text-[1.0625rem] leading-relaxed text-ink;
+    /*
+     * Elements waiting to slide in from a side sit past the edge of the
+     * screen; without this, phones widen the page to fit them, and the fixed
+     * header stretches with it. clip (not hidden) keeps the page a plain
+     * scroller, so section snapping on the root is unaffected.
+     */
+    overflow-x: clip;
   }
   /*
    * Section-by-section scrolling, on every page and every screen size. Each

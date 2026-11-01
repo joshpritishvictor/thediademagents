@@ -70,31 +70,23 @@ export default function Header() {
   const [menuPath, setMenuPath] = useState(pathname)
   const activeSection = useActiveSection(pathname === '/')
   const headerRef = useRef<HTMLElement>(null)
-  const applyRef = useRef<HTMLAnchorElement>(null)
 
   // Publish the bar's real height so anchor links and section snapping land
-  // flush beneath it whatever the zoom level or pixel density (see index.css),
-  // and the width of its Apply button, which the home hero sizes its orbit to
+  // flush beneath it whatever the zoom level or pixel density (see index.css)
   useEffect(() => {
     const bar = headerRef.current
-    const apply = applyRef.current
-    if (!bar || !apply) return
+    if (!bar) return
     const publish = () => {
-      const style = document.documentElement.style
-      style.setProperty(
+      document.documentElement.style.setProperty(
         '--header-h',
         `${Math.floor(bar.getBoundingClientRect().height)}px`,
       )
-      // Zero while the desktop bar is hidden (narrow screens): keep the last real width
-      const width = apply.getBoundingClientRect().width
-      if (width > 0) style.setProperty('--apply-w', `${width}px`)
     }
     publish()
-    // The button is set in a web font: measure again once it has loaded
+    // The bar is set in a web font: measure again once it has loaded
     void document.fonts.ready.then(publish)
     const observer = new ResizeObserver(publish)
     observer.observe(bar)
-    observer.observe(apply)
     return () => observer.disconnect()
   }, [])
 
@@ -105,6 +97,19 @@ export default function Header() {
   }
 
   useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 24))
+
+  // The open menu drops down from the bar while the page stays scrollable
+  // beneath it: a scroll of more than a few pixels means the visitor has moved
+  // on to the page, so the menu gets out of the way
+  useEffect(() => {
+    if (!menuOpen) return
+    const start = window.scrollY
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - start) > 12) setMenuOpen(false)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [menuOpen])
 
   // Every page opens on a dark hero: the bar starts as a hairline and becomes solid navy once scrolled
   // Every page but the light ones opens on a dark hero: the bar starts as a hairline and becomes solid navy once scrolled
@@ -119,12 +124,13 @@ export default function Header() {
           : 'border-on-dark/10 bg-transparent'
       }`}
     >
-      <div className="container-page flex h-[4.25rem] items-center justify-between gap-4 md:h-[4.5rem] lg:gap-6">
+      <div className="relative container-page flex h-[4.25rem] items-center justify-between gap-4 md:h-[4.5rem] lg:gap-6">
         <Logo light withTag={false} />
 
+        {/* Centred on the bar itself, not in the space beside the logo */}
         <nav
           aria-label="Main"
-          className="hidden items-center gap-4 whitespace-nowrap lg:flex xl:gap-6 2xl:gap-7"
+          className="hidden items-center gap-4 whitespace-nowrap lg:absolute lg:top-1/2 lg:left-1/2 lg:flex lg:-translate-x-1/2 lg:-translate-y-1/2 xl:gap-6 2xl:gap-7"
         >
           {navLinks.map(({ to, label }) => {
             const hash = to.indexOf('#')
@@ -156,17 +162,6 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-5 whitespace-nowrap lg:flex">
-          <Link
-            ref={applyRef}
-            to={applyLink.to}
-            className="btn-gold px-4 py-3 xl:px-5"
-          >
-            <span className="xl:hidden">Apply</span>
-            <span className="hidden xl:inline">{applyLink.label}</span>
-          </Link>
-        </div>
-
         <button
           type="button"
           className="p-2 text-on-dark lg:hidden"
@@ -191,25 +186,39 @@ export default function Header() {
             transition={{ duration: 0.45, ease: easeOutExpo }}
           >
             <div className="container-page flex flex-col py-6">
-              {navLinks.map(({ to, label }, i) => (
-                <m.div
-                  key={to}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 * i, duration: 0.4 }}
-                >
-                  <Link
-                    to={to}
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-baseline justify-between border-b border-on-dark/10 py-4 font-display text-2xl text-on-dark"
+              {navLinks.map(({ to, label }, i) => {
+                const hash = to.indexOf('#')
+                // The current page (or the home section on screen) is shown in gold, as in the bar
+                const active =
+                  hash >= 0
+                    ? activeSection === to.slice(hash + 1)
+                    : pathname === to
+                return (
+                  <m.div
+                    key={to}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 * i, duration: 0.4 }}
                   >
-                    {label}
-                    <span className="font-sans text-[0.65rem] tracking-[0.3em] text-gold-500">
-                      0{i + 1}
-                    </span>
-                  </Link>
-                </m.div>
-              ))}
+                    <Link
+                      to={to}
+                      onClick={() => setMenuOpen(false)}
+                      aria-current={active ? 'page' : undefined}
+                      className={`flex items-center justify-between border-b border-on-dark/10 py-4 font-display text-2xl ${
+                        active ? 'text-gold-400' : 'text-on-dark'
+                      }`}
+                    >
+                      {label}
+                      {active && (
+                        <span
+                          className="size-2 rounded-full bg-gold-500"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Link>
+                  </m.div>
+                )
+              })}
               <m.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
