@@ -2,7 +2,8 @@ import { ArrowRight, ChevronDown } from 'lucide-react'
 import { m } from 'motion/react'
 import { Fragment } from 'react'
 import { hero } from '../../content/advisors'
-import { cta } from '../../content/site'
+import { Link } from 'react-router-dom'
+import { applyLink, cta } from '../../content/site'
 import { easeOutExpo } from '../../lib/motion'
 import heroBg from '../../assets/images/hero-boardroom.jpg'
 
@@ -77,10 +78,25 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.95, ease: easeOutExpo }}
           >
             {/* Down to the D.I.S.C. section, like the scroll cue */}
-            <a href="#disc" className="btn-gold">
+            <a
+              href="#disc"
+              className="btn-navy border border-gold-500/40"
+            >
               <span>{cta.startDisc}</span>
-              <ArrowRight size={16} aria-hidden="true" />
             </a>
+            {/* Same treatment as the footer's button: a glint crossing it every few seconds, the arrow nudging on hover */}
+            <Link to={applyLink.to} className="group btn-gold">
+              <span
+                className="pointer-events-none absolute! inset-y-0 left-0 w-1/3 animate-shine bg-gradient-to-r from-transparent via-gold-300/80 to-transparent"
+                aria-hidden="true"
+              />
+              <span>{applyLink.label}</span>
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-500 ease-out-expo group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </Link>
           </m.div>
         </div>
 
