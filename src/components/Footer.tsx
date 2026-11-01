@@ -19,7 +19,8 @@ const contactClass = 'inline-flex items-start gap-2.5'
 export default function Footer() {
   return (
     <footer className="relative border-t border-gold-500/25 bg-brand-950 text-on-dark">
-      <div className="container-page pt-12 pb-6 md:pt-14 md:pb-8">
+      {/* Centred in the screen-high footer (see index.css); the legal bar below stays pinned to the foot */}
+      <div className="container-page my-auto pt-12 pb-6 md:pt-14 md:pb-8">
         {/* Brand, then three equal link columns */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.25fr)_repeat(3,minmax(0,1fr))] lg:gap-12">
           {/* Centred on the height of the link columns beside it */}

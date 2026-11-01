@@ -8,7 +8,7 @@ import heroBg from '../../assets/images/hero-boardroom.jpg'
 
 export default function Hero() {
   return (
-    <section className="hero relative flex flex-col overflow-hidden bg-brand-950 text-on-dark lg:min-h-svh">
+    <section className="hero relative flex flex-col overflow-hidden bg-brand-950 text-on-dark">
       <img
         src={heroBg}
         alt=""

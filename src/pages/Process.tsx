@@ -1,7 +1,6 @@
 import { m, useScroll, useSpring, type TargetAndTransition } from 'motion/react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { ChannelChip } from '../components/ChannelIcon'
-import SectionHeading from '../components/SectionHeading'
 import Seo from '../components/Seo'
 import { solution } from '../content/advisors'
 import { easeOutExpo } from '../lib/motion'
@@ -62,10 +61,24 @@ function Steps() {
   return (
     <section className="bg-surface pt-24 pb-24 md:pt-28 md:pb-32">
       <div className="container-page">
-        <SectionHeading
-          eyebrow={solution.eyebrow}
-          title={['From initial interest', 'to professional meeting.']}
-        />
+        {/* Page title, in the same eyebrow + display-page pattern as the other inner pages */}
+        <m.p
+          className="eyebrow"
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {solution.eyebrow}
+        </m.p>
+        <m.h1
+          className="mt-6 display-page text-brand-950"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: easeOutExpo }}
+        >
+          From initial interest{' '}
+          <em className="accent">to professional meeting.</em>
+        </m.h1>
 
         <div ref={track} className="relative mt-16 lg:mt-20">
           {/* The line between the first and last markers (down the left on small screens) and its gold fill */}

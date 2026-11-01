@@ -12,15 +12,14 @@ export default function ServicesTeaser() {
   return (
     <section
       id="services"
-      className="flex flex-col bg-surface lg:min-h-[calc(100svh-var(--snap-top))]"
+      className="flex flex-col bg-surface"
     >
-      <div className="container-page py-16 lg:my-auto lg:py-8">
+      <div className="container-page my-auto py-16 lg:py-8">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
           <div className="lg:col-span-4">
             <SectionHeading
               eyebrow={pricing.eyebrow}
               title={[pricing.heading[0], pricing.heading[1]]}
-              description={pricing.body}
             />
             <Reveal delay={0.15}>
               <Link to="/services/" className="btn-navy mt-8">

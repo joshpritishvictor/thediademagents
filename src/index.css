@@ -125,20 +125,39 @@
     @apply bg-surface font-sans text-[1.0625rem] leading-relaxed text-ink;
   }
   /*
-   * Section-by-section scrolling. Each top-level block of a page is a snap
-   * point; a block taller than the screen still scrolls freely inside it.
-   * Layout adds .snap once the page has rendered, so snapping never fights
-   * the initial layout or a hash scroll.
+   * Section-by-section scrolling, on every page and every screen size. Each
+   * top-level block of a page fills one screen (the first sits under the
+   * fixed header, the rest tuck just beneath it) with its content centred,
+   * and is a mandatory snap point that a flick cannot skip past. A block
+   * taller than the screen still scrolls freely inside it before the next
+   * one snaps in. Layout adds .snap once the page has rendered, so snapping
+   * never fights the initial layout or a hash scroll.
    */
   html.snap {
-    scroll-snap-type: y proximity;
+    scroll-snap-type: y mandatory;
   }
   #main > section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100svh - var(--snap-top));
     scroll-snap-align: start;
-    scroll-snap-stop: normal;
+    scroll-snap-stop: always;
   }
-  body > div > footer {
-    scroll-snap-align: end;
+  #main > section:first-of-type {
+    min-height: 100svh;
+  }
+  /*
+   * The footer is the page's last snap point and fills a screen of its own,
+   * like a section, so nothing of the page above shows once you reach it.
+   * Without a snap point, mandatory snapping could never rest on it.
+   */
+  #root > div > footer {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--snap-top));
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
   h1,
   h2,
@@ -179,9 +198,9 @@
 @utility display-xl {
   @apply font-display text-[clamp(2.5rem,5.4vw,5.25rem)] leading-[1.02] font-medium;
 }
-/* Page title on the light inner pages (Services, About, Who Thrives) */
+/* Page title on the inner pages (Process, Services, Who Thrives, About, Apply) */
 @utility display-page {
-  @apply font-display text-[clamp(2.25rem,3.6vw,3.5rem)] leading-[1.05] font-medium;
+  @apply font-display text-[clamp(2rem,3.2vw,3.125rem)] leading-[1.08] font-medium;
 }
 @utility display-lg {
   @apply font-display text-[2.0625rem] leading-[1.15] font-medium;

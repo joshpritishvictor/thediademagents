@@ -9,11 +9,11 @@ const CYCLE_MS = 7000
 
 export default function Problem() {
   return (
-    <section className="relative flex flex-col overflow-hidden bg-brand-950 py-14 text-on-dark lg:min-h-[calc(100svh-var(--snap-top))] lg:py-10">
+    <section className="relative flex flex-col overflow-hidden bg-brand-950 py-14 text-on-dark lg:py-10">
       <div className="glow-soft" aria-hidden="true" />
 
-      {/* Fills one screen below the header, content centred, so the whole block is in view when snapped to */}
-      <div className="relative container-page lg:my-auto">
+      {/* Content centred in the one-screen block (see index.css), so the whole block is in view when snapped to */}
+      <div className="relative container-page my-auto">
         <SectionHeading
           title={[problem.heading[0], problem.heading[1]]}
           align="center"

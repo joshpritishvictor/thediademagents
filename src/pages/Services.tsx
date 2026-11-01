@@ -11,7 +11,6 @@ export default function Services() {
     <>
       <Seo
         title="Services"
-        description={pricing.body}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Service',
@@ -57,15 +56,6 @@ export default function Services() {
             {pricing.heading[0]}{' '}
             <em className="accent">{pricing.heading[1]}</em>
           </m.h1>
-          <m.p
-            className="mt-6 max-w-2xl text-lg text-ink-muted md:text-xl"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: easeOutExpo }}
-          >
-            {pricing.body}
-          </m.p>
-
           <div className="mt-14 lg:mt-16">
             <FeePanels delay={0.45} />
           </div>

@@ -108,7 +108,7 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
     : undefined
   return (
     <m.article
-      className={`panel flex flex-col p-7 md:p-9 lg:grid lg:grid-rows-subgrid ${
+      className={`panel flex flex-col p-6 md:p-7 lg:grid lg:grid-rows-subgrid ${
         plan.featured ? 'ring-2 ring-gold-500 ring-inset' : ''
       }`}
       style={{ gridRow: `span ${ROWS}` }}
@@ -123,17 +123,17 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
       </h2>
 
       {/* 3–5: the headline fee, what it's charged per, and how many clients */}
-      <p className="mt-8 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-display text-6xl leading-none text-gold-600 lining-nums md:text-7xl">
+      <p className="mt-5 flex flex-wrap items-baseline gap-x-4">
+        <span className="font-display text-4xl leading-none text-gold-600 lining-nums md:text-5xl">
           {plan.price}
         </span>
         <span className="font-sans text-lg font-semibold text-gold-600">
           {plan.tax}
         </span>
       </p>
-      <p className="mt-4 text-lg text-brand-950">{plan.per}</p>
+      <p className="mt-2 text-lg text-brand-950">{plan.per}</p>
       {/* Any footnote follows on the same line, smaller */}
-      <p className="mt-3 font-sans font-semibold text-gold-600">
+      <p className="mt-2 font-sans font-semibold text-gold-600">
         {plan.promise}
         {plan.promiseNote && (
           <>
@@ -146,20 +146,20 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
       </p>
 
       {/* 6: what the plan includes, grouped by where it happens in the process, closing on any all-in total */}
-      <div className="mt-7 border-t border-ink/10 pt-7">
+      <div className="mt-5 border-t border-ink/10 pt-5">
         <p className="eyebrow">{fees.includedLabel}</p>
         {inherited && (
-          <p className="mt-5 flex items-start gap-3 font-sans font-bold text-brand-950">
+          <p className="mt-3 flex items-start gap-3 font-sans font-bold text-brand-950">
             <Tick />
             <span>{fees.everythingIn(inherited.name)}</span>
           </p>
         )}
         {groupsFor(plan).map((group) => (
-          <div key={group.label} className="mt-6">
+          <div key={group.label} className="mt-4">
             <p className="font-sans text-sm font-bold text-brand-950">
               {group.label}
             </p>
-            <ul className="mt-3 space-y-3">
+            <ul className="mt-2 space-y-2">
               {group.items.map((item) => (
                 <li
                   key={item.text}
@@ -196,7 +196,7 @@ function FeePanel({ plan, delay }: { plan: FeePlan; delay: number }) {
           </div>
         ))}
         {plan.total && (
-          <p className="mt-7 border-t border-ink/10 pt-6 leading-relaxed font-semibold text-brand-950">
+          <p className="mt-5 border-t border-ink/10 pt-4 leading-relaxed font-semibold text-brand-950">
             {plan.total}
           </p>
         )}

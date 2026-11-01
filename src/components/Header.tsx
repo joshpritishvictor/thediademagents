@@ -1,4 +1,4 @@
-import { Menu, Phone, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import {
   AnimatePresence,
   m,
@@ -7,7 +7,7 @@ import {
 } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { applyLink, navLinks, site, solidHeaderPaths } from '../content/site'
+import { applyLink, navLinks, solidHeaderPaths } from '../content/site'
 import { easeOutExpo } from '../lib/motion'
 import Logo from './Logo'
 
@@ -157,13 +157,6 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-5 whitespace-nowrap lg:flex">
-          <a
-            href={site.contact.phoneHref}
-            className="hidden items-center gap-2 font-sans text-[0.72rem] font-semibold tracking-[0.12em] text-on-dark/70 transition-colors hover:text-gold-400 2xl:inline-flex"
-          >
-            <Phone size={14} aria-hidden="true" />
-            {site.contact.phone}
-          </a>
           <Link
             ref={applyRef}
             to={applyLink.to}
