@@ -59,7 +59,7 @@ function Steps() {
 
   // The page opens with this section, so its top padding clears the fixed header
   return (
-    <section className="bg-surface pt-24 pb-24 md:pt-28 md:pb-32">
+    <section className="overflow-x-clip bg-surface pt-24 pb-24 md:pt-28 md:pb-32">
       <div className="container-page">
         {/* Page title, in the same eyebrow + display-page pattern as the other inner pages */}
         <m.p
