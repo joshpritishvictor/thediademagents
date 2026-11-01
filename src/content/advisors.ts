@@ -350,7 +350,6 @@ export type Plan = {
 export const pricing = {
   eyebrow: 'Our Services',
   heading: ['Choose the Service That Fits', 'Your Practice'],
-  body: `Whether you want qualified appointments on a flexible basis or a comprehensive acquisition service, ${brand} offers two clear options.`,
   plans: [
     {
       id: 'flex',

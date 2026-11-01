@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <>
       <Seo title="Page not found" />
-      <section className="relative flex min-h-svh items-center overflow-hidden bg-brand-950 pt-24 text-on-dark">
+      <section className="relative flex flex-col justify-center overflow-hidden bg-brand-950 pt-24 text-on-dark">
         <div className="glow-soft" aria-hidden="true" />
         <div className="relative container-page py-20 text-center">
           <p className="font-display text-sm text-gold-500 italic">404</p>

@@ -18,10 +18,10 @@ export default function Disc() {
   return (
     <section
       id="disc"
-      className="flex flex-col bg-surface lg:min-h-[calc(100svh-var(--snap-top))]"
+      className="flex flex-col bg-surface"
     >
       <ProfessionsTicker />
-      <div className="container-page py-20 lg:my-auto lg:py-4">
+      <div className="container-page my-auto py-20 lg:py-4">
         {/* Two columns in two rows: the heading shares its row with the circle row, so the circles sit level with it; the text and the stage panel share the second */}
         <div className="grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-x-16">
           <SectionHeading

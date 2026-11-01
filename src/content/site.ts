@@ -63,14 +63,17 @@ export const solidHeaderPaths = [
   '/services/',
   '/about/',
   '/who-thrives/',
+  '/apply/',
+  '/about-us/',
 ]
 
 export const navLinks = [
   { to: '/', label: 'Home' },
+  { to: '/about-us/', label: 'About Us' },
   { to: '/process/', label: 'Our Process' },
   { to: '/services/', label: 'Services' },
   { to: '/who-thrives/', label: 'Who Thrives' },
-  { to: '/about/', label: 'About Us' },
+  { to: '/about/', label: 'The Table' },
 ]
 
 export const applyLink = { to: '/apply/', label: 'Apply as an Advisor' }

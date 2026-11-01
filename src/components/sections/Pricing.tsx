@@ -26,7 +26,6 @@ export default function Pricing({ heading = true }: { heading?: boolean }) {
           <SectionHeading
             eyebrow={pricing.eyebrow}
             title={[pricing.heading[0], pricing.heading[1]]}
-            description={pricing.body}
           />
         )}
 

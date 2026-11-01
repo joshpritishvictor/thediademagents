@@ -2,18 +2,6 @@ import { site } from './site'
 
 const brand = site.shortName
 
-export const applyPage = {
-  eyebrow: 'Advisor Application',
-  heading: ['Apply to become a', `${brand} Advisor.`],
-  body: 'Tell us about your practice. A member of our team will review your application and reach out within two business days to schedule a 20-minute introduction call.',
-  highlights: [
-    'No commission splitting. Ever.',
-    'Independent CPA at every coordinated meeting',
-    'D.I.S.C. intake completed before you meet the client',
-    `Only 20 ${brand} Premium Advisor spots at the locked-in rate`,
-  ],
-}
-
 export const applyForm = {
   heading: 'Advisor Application',
   submit: 'Submit Application',

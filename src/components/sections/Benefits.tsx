@@ -7,9 +7,9 @@ export default function Benefits() {
   return (
     <section
       id="benefits"
-      className="flex flex-col bg-surface lg:min-h-[calc(100svh-var(--snap-top))]"
+      className="flex flex-col bg-surface"
     >
-      <div className="container-page py-16 lg:my-auto lg:py-12">
+      <div className="container-page my-auto py-16 lg:py-12">
         <SectionHeading
           eyebrow={benefits.eyebrow}
           title={[benefits.heading[0], benefits.heading[1]]}
