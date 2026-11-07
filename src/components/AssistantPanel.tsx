@@ -1,4 +1,11 @@
-import { ArrowUp, RotateCcw, Square, X } from 'lucide-react'
+import {
+  ArrowUp,
+  ChevronRight,
+  ClipboardPen,
+  RotateCcw,
+  Square,
+  X,
+} from 'lucide-react'
 import AssistantIcon from './AssistantIcon'
 import {
   useEffect,
@@ -70,11 +77,22 @@ export default function AssistantPanel({
     if (!busy) saveConversation(messages)
   }, [messages, busy])
 
-  // Follow the answer as it is written
+  // Show each exchange from its start: the latest question at the top, with its
+  // answer reading down from there (rather than following the end of the answer).
+  // A new chat starts at the top.
+  const lastQuestion = messages.findLastIndex((m) => m.role === 'user')
   useEffect(() => {
     const el = log.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [messages, open])
+    if (!el || !open) return
+    const start =
+      lastQuestion >= 0
+        ? el.querySelector<HTMLElement>(`[data-turn="${lastQuestion}"]`)
+        : null
+    el.scrollTo({
+      top: start ? start.offsetTop - 12 : 0,
+      behavior: 'smooth',
+    })
+  }, [lastQuestion, open])
 
   useEffect(() => {
     if (open) input.current?.focus()
@@ -223,6 +241,20 @@ export default function AssistantPanel({
   const last = messages[messages.length - 1]
   const waiting = busy && last?.role === 'assistant' && !last.content
 
+  const renderMessage = (message: Message, i: number) =>
+    message.role === 'assistant' && !message.content ? null : (
+      // data-turn: where the view scrolls to when this is the latest question
+      <div key={i} data-turn={i}>
+        <Bubble role={message.role} notice={message.notice}>
+          {message.role === 'assistant' && !message.notice ? (
+            <Markdown text={message.content} onLink={onLink} />
+          ) : (
+            message.content
+          )}
+        </Bubble>
+      </div>
+    )
+
   return (
     <section
       role="dialog"
@@ -257,18 +289,39 @@ export default function AssistantPanel({
         role="log"
         aria-live="polite"
         aria-busy={busy}
-        className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4 text-[0.92rem] leading-relaxed sm:px-5 sm:py-5"
+        className="relative flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4 text-[0.92rem] leading-relaxed sm:px-5 sm:py-5"
       >
-        <Bubble role="assistant">{assistant.greeting}</Bubble>
+        <Bubble role="assistant" wide={messages.length === 0}>
+          {assistant.greeting}
+        </Bubble>
 
         {messages.length === 0 && (
-          <ul className="flex flex-col items-start gap-2 pt-1">
+          <ul className="flex flex-col gap-2 pt-1">
+            {/* The main action: apply right here, with follow-up questions from the assistant */}
+            <li>
+              <button
+                type="button"
+                onClick={() => ask(assistant.applyAction.prompt)}
+                className="group flex w-full items-center gap-3 rounded-lg border border-gold-500 bg-gold-500 px-3 py-2.5 text-left text-brand-950 shadow-[0_8px_20px_-12px_rgb(0_0_0/0.5)] transition-colors hover:bg-gold-300"
+              >
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand-950 text-gold-400">
+                  <ClipboardPen className="size-4" aria-hidden="true" />
+                </span>
+                <span className="min-w-0 flex-1 text-[0.9rem] font-bold">
+                  {assistant.applyAction.label}
+                </span>
+                <ChevronRight
+                  className="size-4 shrink-0 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </button>
+            </li>
             {suggestionsFor(pathname).map((question) => (
               <li key={question}>
                 <button
                   type="button"
                   onClick={() => ask(question)}
-                  className="rounded-lg border border-gold-500/40 bg-card px-3 py-2 text-left text-[0.85rem] text-brand-950 transition-colors hover:border-gold-500 hover:bg-gold-300/40"
+                  className="w-full rounded-lg border border-gold-500/40 bg-card px-3 py-2 text-left text-[0.85rem] text-brand-950 transition-colors hover:border-gold-500 hover:bg-gold-300/40"
                 >
                   {question}
                 </button>
@@ -277,28 +330,32 @@ export default function AssistantPanel({
           </ul>
         )}
 
-        {messages.map((message, i) =>
-          message.role === 'assistant' && !message.content ? null : (
-            <Bubble key={i} role={message.role} notice={message.notice}>
-              {message.role === 'assistant' && !message.notice ? (
-                <Markdown text={message.content} onLink={onLink} />
-              ) : (
-                message.content
-              )}
-            </Bubble>
-          ),
-        )}
+        {/* Earlier exchanges */}
+        {messages
+          .slice(0, Math.max(lastQuestion, 0))
+          .map((message, i) => renderMessage(message, i))}
 
-        {waiting && (
-          <p className="text-[0.82rem] text-ink-muted italic">
-            {assistant.thinking}
-          </p>
+        {/*
+          The latest exchange (question, answer, any notices) is at least as tall as the
+          chat, so it can always be scrolled to the top and its answer reads down from there
+        */}
+        {lastQuestion >= 0 && (
+          <div className="min-h-full space-y-4">
+            {messages
+              .slice(lastQuestion)
+              .map((message, i) => renderMessage(message, lastQuestion + i))}
+            {waiting && (
+              <p className="text-[0.82rem] text-ink-muted italic">
+                {assistant.thinking}
+              </p>
+            )}
+          </div>
         )}
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="border-t border-ink/10 bg-card px-3 pt-3 pb-2 sm:px-4"
+        className="border-t border-ink/10 bg-card px-3 py-3 sm:px-4"
       >
         <div className="flex items-end gap-2">
           <label htmlFor="assistant-input" className="sr-only">
@@ -335,9 +392,6 @@ export default function AssistantPanel({
             </button>
           )}
         </div>
-        <p className="pt-2 text-center text-[0.68rem] leading-snug text-ink-muted">
-          {assistant.disclaimer}
-        </p>
       </form>
     </section>
   )
@@ -368,9 +422,12 @@ function IconButton({
 function Bubble({
   role,
   notice,
+  wide = false,
   children,
 }: {
   role: Message['role']
+  /** Full width, lining up with the boxes under it (the intro) */
+  wide?: boolean
   notice?: boolean
   children: ReactNode
 }) {
@@ -385,7 +442,7 @@ function Bubble({
   }
   return (
     <div
-      className={`max-w-[92%] rounded-xl rounded-bl-sm border px-4 py-2.5 text-left ${
+      className={`${wide ? 'w-full' : 'max-w-[92%]'} rounded-xl rounded-bl-sm border px-4 py-2.5 text-left ${
         notice
           ? 'border-gold-500/40 bg-gold-300/20 text-ink-muted italic'
           : 'border-ink/10 bg-card text-ink'

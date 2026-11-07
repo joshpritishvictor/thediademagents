@@ -15,13 +15,18 @@ export const assistant = {
   endpoint: env.VITE_ASSISTANT_ENDPOINT || '/api/assistant',
   name,
   launcher: `Ask ${name}`,
-  greeting: `Welcome, I’m ${name}, the ${brand} AI assistant. I can answer questions about ${brand} for advisors: how the process works, what each service includes, pricing, and how to apply.`,
+  greeting: `Hi, I’m ${name}, ${brand}’s AI assistant. Ask me about our process, services and pricing, or apply right here.`,
+  /** The intro's main action: starts an application in the chat */
+  applyAction: {
+    label: `Apply with ${name}`,
+    /** Sent as the visitor's message when they tap it */
+    prompt: 'I’d like to apply. Can you take my application here in the chat?',
+  },
   /** Shown in the chat while an answer is being prepared */
   thinking: `${name} is thinking…`,
   /** Shown under the reply once an application taken in the chat is saved to the CRM */
   applied: `✓ Application received. The ${brand} team will be in touch.`,
   placeholder: 'Ask a question…',
-  disclaimer: `AI answers based on this website. Please confirm the details with the ${brand} team.`,
   restart: 'New conversation',
   close: 'Close',
   send: 'Send',
@@ -66,13 +71,13 @@ export const assistant = {
     ],
     '/apply/': [
       'What happens after I apply?',
-      'Can I apply here in the chat?',
       'Can I book an introduction call first?',
+      'What do I need to apply?',
     ],
     '*': [
       `What does ${brand} do for advisors?`,
       `What’s the difference between ${flex} and ${premium}?`,
-      'Can I apply here in the chat?',
+      'How do I apply?',
     ],
   } as Record<string, string[]>,
 }
