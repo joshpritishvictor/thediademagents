@@ -3,12 +3,15 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
+import {
+  buildKnowledge,
+  KNOWLEDGE_PATH,
+  type KnowledgeEntry,
+} from '../plugins/assistant-knowledge.ts'
 
 type ManifestChunk = { file: string; imports?: string[]; css?: string[] }
-type ServerEntry = {
-  render: (url: string) => Promise<string>
+type ServerEntry = KnowledgeEntry & {
   routeModules: (url: string) => string[]
-  urls: string[]
   siteUrl: string
 }
 
@@ -17,9 +20,10 @@ const dist = path.join(root, 'dist')
 const serverDir = path.join(root, 'dist-server')
 const manifestFile = path.join(dist, '.vite', 'manifest.json')
 
-const { render, routeModules, urls, siteUrl } = (await import(
+const entry = (await import(
   pathToFileURL(path.join(serverDir, 'entry-server.js')).href
 )) as ServerEntry
+const { render, routeModules, urls, siteUrl } = entry
 
 const template = await readFile(path.join(dist, 'index.html'), 'utf8')
 const manifest = JSON.parse(await readFile(manifestFile, 'utf8')) as Record<
@@ -84,6 +88,13 @@ ${urls.map((url) => `  <url><loc>${siteUrl}${url}</loc><lastmod>${today}</lastmo
 await writeFile(
   path.join(dist, 'robots.txt'),
   `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+)
+
+// The AI assistant's knowledge: the text of every page (read by functions/api/assistant.ts)
+const knowledge = await buildKnowledge(entry)
+await writeFile(path.join(dist, KNOWLEDGE_PATH.slice(1)), knowledge)
+console.log(
+  `  assistant knowledge: ${Math.round(knowledge.length / 1024)} KB from ${urls.length} pages`,
 )
 
 // Build-only artifacts: don't deploy them
