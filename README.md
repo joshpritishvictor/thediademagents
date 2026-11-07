@@ -51,6 +51,35 @@ Each submission creates or updates the contact, tags it, adds a note and fills o
 custom field per form answer. Create those fields once per sub-account with
 `npm run ghl:fields` (the token needs the custom-field scopes for that run only).
 
+## AI assistant
+
+A chat button on every page opens an assistant that answers advisors' questions
+about the programme, services, pricing and applying. It runs on Claude through
+`functions/api/assistant.ts` (served in development by `plugins/api-dev.ts`, like
+the form) and streams each answer as it is written.
+
+Its knowledge is the site itself, so there is nothing to keep in sync by hand.
+At build time `scripts/prerender.ts` takes the text of every pre-rendered page
+(`plugins/assistant-knowledge.ts` turns the HTML into plain text) and writes
+`dist/assistant-knowledge.txt`; the function reads that file and answers only
+from it. Change any copy, in `src/content/` or in a page, and the assistant
+knows it after the next deploy. In development the file is rebuilt on every
+request, so edits apply at once. Look at
+`http://localhost:5173/assistant-knowledge.txt` to see exactly what it knows.
+
+- Set `ANTHROPIC_API_KEY` (server only) to switch it on; `ASSISTANT_MODEL` and
+  `ASSISTANT_EFFORT` are optional (see `.env.example`).
+- The chat window's wording and the suggested questions for each page are in
+  `src/content/assistant.ts`. `VITE_ASSISTANT_ENABLED=false` hides it.
+- The model's instructions (stay on topic, never invent prices, link to pages,
+  no personal financial advice) are at the top of `functions/api/assistant.ts`.
+- Visitors can also **apply in the chat**. The assistant asks follow-up questions for
+  the same details as the form, shows a summary, and once the visitor confirms, saves
+  it to GoHighLevel with the form's own code (`saveApplication` in
+  `functions/api/apply.ts`). Those contacts get the extra tag `ai-assistant`, the
+  source "Advisor website application (AI assistant)" and a note saying the chat took
+  it. The answer choices live in `src/content/applyOptions.ts`, shared by both.
+
 ## Brand, logo, domain and contact details
 
 All identity values are read from `VITE_*` environment variables at build time,
@@ -104,6 +133,8 @@ pure white.
 | `plugins/theme.ts`               | Injects the palette (with `VITE_THEME_*` overrides) into the page |
 | `scripts/make-animations.ts`     | Generates the Lottie files in `public/animations/`                |
 | `functions/api/apply.ts`         | Saves applications to GoHighLevel                                 |
+| `functions/api/assistant.ts`     | The AI assistant: answers questions from the site's text          |
+| `src/content/assistant.ts`       | The assistant's chat-window copy and suggested questions          |
 | `scripts/prerender.ts`           | Writes each route to `dist/<route>/index.html` after build        |
 
 ## Lottie animations
@@ -122,6 +153,6 @@ To swap one for a file from LottieFiles, drop the `.lottie` or `.json` file in
 ## Deploy
 
 Cloudflare Pages: build command `npm run build`, output directory `dist`.
-Add `GHL_API_TOKEN` and `GHL_LOCATION_ID` as encrypted variables for Production
-and Preview, plus any `VITE_*` overrides from the table above (at least
+Add `GHL_API_TOKEN`, `GHL_LOCATION_ID` and `ANTHROPIC_API_KEY` as encrypted
+variables for Production and Preview, plus any `VITE_*` overrides from the table above (at least
 `VITE_SITE_URL` once the domain is known).

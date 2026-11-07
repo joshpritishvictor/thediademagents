@@ -24,6 +24,12 @@ interface ImportMetaEnv {
   readonly VITE_LOGO_TAG?: string
   /** Form backend URL that accepts a JSON POST. Defaults to /api/apply (functions/api/apply.ts) */
   readonly VITE_APPLY_ENDPOINT?: string
+  /** "false" hides the AI assistant */
+  readonly VITE_ASSISTANT_ENABLED?: string
+  /** Assistant backend that streams answers. Defaults to /api/assistant (functions/api/assistant.ts) */
+  readonly VITE_ASSISTANT_ENDPOINT?: string
+  /** Title of the assistant's chat window, e.g. "Aurelia" */
+  readonly VITE_ASSISTANT_NAME?: string
 }
 
 interface ImportMeta {

@@ -32,7 +32,8 @@
     'Playfair Display Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Manrope Variable', system-ui, 'Segoe UI', sans-serif;
   /* Display numerals (the Premium spots count): Roman inscriptional capitals, even-height digits */
-  --font-numeral: 'Cinzel Variable', 'Playfair Display Variable', Georgia, serif;
+  --font-numeral:
+    'Cinzel Variable', 'Playfair Display Variable', Georgia, serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -41,6 +42,47 @@
   --animate-sweep: sweep 2.8s ease-in-out infinite;
   --animate-shine: shine 4.5s ease-in-out infinite;
   --animate-gleam: gleam 5s ease-in-out infinite;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-crown-sway: crown-sway 6s ease-in-out infinite;
+  --animate-halo: halo 3.2s ease-out infinite;
+  /* The assistant button drifting gently, as if floating */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  /* The crown tipping slightly side to side, then settling */
+  @keyframes crown-sway {
+    0%,
+    60%,
+    100% {
+      transform: rotate(0deg);
+    }
+    70% {
+      transform: rotate(-6deg);
+    }
+    80% {
+      transform: rotate(5deg);
+    }
+    90% {
+      transform: rotate(-2deg);
+    }
+  }
+  /* A gold ring spreading out from the assistant button and fading */
+  @keyframes halo {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
 
   @keyframes marquee {
     to {

@@ -11,6 +11,11 @@
 /brand/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
+# The AI assistant's knowledge (the site's own text, rebuilt each deploy): keep it out of search results
+/assistant-knowledge.txt
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex
+
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

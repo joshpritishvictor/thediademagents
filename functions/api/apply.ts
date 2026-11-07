@@ -28,7 +28,10 @@ const LIMITS = {
 } as const
 
 type Field = keyof typeof LIMITS
-type Submission = Record<Field, string> & { consent: boolean }
+export type Submission = Record<Field, string> & { consent: boolean }
+
+/** Where an application came from, shown in GoHighLevel */
+export type ApplicationSource = 'form' | 'assistant'
 
 /** Variables Cloudflare passes to the function (see .env.example) */
 export type Env = {
@@ -91,7 +94,7 @@ const SAFE_TAG = /^[\w &/,-]{1,60}$/
 const json = (body: object, status = 200) => Response.json(body, { status })
 
 /** Trims, length-limits and type-checks the untrusted request body */
-function parseSubmission(body: unknown): Submission | string {
+export function parseSubmission(body: unknown): Submission | string {
   if (typeof body !== 'object' || body === null) return 'Invalid request.'
   const raw = body as Record<string, unknown>
 
@@ -131,9 +134,11 @@ async function ghl(path: string, token: string, body: object) {
   return response.json() as Promise<Record<string, unknown>>
 }
 
-function buildNote(data: Submission) {
+function buildNote(data: Submission, via: ApplicationSource) {
   const lines = [
-    'Advisor website — application',
+    via === 'assistant'
+      ? 'Advisor website — application (taken by the AI assistant in the chat)'
+      : 'Advisor website — application',
     '',
     `Service of interest: ${data.interest || '—'}`,
     `Intent: ${data.intent || 'Application'}`,
@@ -147,6 +152,64 @@ function buildNote(data: Submission) {
   ]
   if (data.message) lines.push('', 'Message:', data.message)
   return lines.join('\n')
+}
+
+/**
+ * Saves a checked application to GoHighLevel: creates or updates the contact with the
+ * custom fields, then adds the tags and a note. Throws if the contact can't be saved.
+ * Used by the form (below) and by the AI assistant (functions/api/assistant.ts).
+ */
+export async function saveApplication(
+  data: Submission,
+  {
+    token,
+    locationId,
+    tags: ghlTags,
+  }: { token: string; locationId: string; tags?: string },
+  via: ApplicationSource,
+) {
+  const tags = [
+    ...(ghlTags ?? 'advisor-application').split(','),
+    ...(via === 'assistant' ? ['ai-assistant'] : []),
+    data.interest,
+    data.intent,
+    data.consent ? 'marketing-consent' : '',
+  ]
+    .map((tag) => tag.trim().toLowerCase())
+    .filter((tag) => SAFE_TAG.test(tag))
+
+  // Creates the contact, or updates the existing one with the same email/phone.
+  // Tags are NOT sent here: upsert replaces the whole tag list, which would wipe
+  // a returning contact's earlier tags (including marketing-consent).
+  const { contact } = (await ghl('/contacts/upsert', token, {
+    locationId,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    ...(data.brokerage && { companyName: data.brokerage }),
+    source:
+      via === 'assistant'
+        ? 'Advisor website application (AI assistant)'
+        : 'Advisor website application',
+    customFields: customFieldValues(data),
+  })) as { contact?: { id?: string } }
+
+  if (contact?.id) {
+    // The contact is already saved, so these shouldn't fail the submission
+    const results = await Promise.allSettled([
+      // Adds to the existing tags; "advisor-application" can trigger the follow-up workflow
+      ghl(`/contacts/${contact.id}/tags`, token, { tags }),
+      ghl(`/contacts/${contact.id}/notes`, token, {
+        body: buildNote(data, via),
+      }),
+    ])
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        console.error('Application: follow-up request failed', result.reason)
+      }
+    }
+  }
 }
 
 export async function POST(request: Request, env: Env) {
@@ -176,44 +239,12 @@ export async function POST(request: Request, env: Env) {
   const data = parseSubmission(body)
   if (typeof data === 'string') return json({ error: data }, 400)
 
-  const tags = [
-    ...(env.GHL_TAGS ?? 'advisor-application').split(','),
-    data.interest,
-    data.intent,
-    data.consent ? 'marketing-consent' : '',
-  ]
-    .map((tag) => tag.trim().toLowerCase())
-    .filter((tag) => SAFE_TAG.test(tag))
-
   try {
-    // Creates the contact, or updates the existing one with the same email/phone.
-    // Tags are NOT sent here: upsert replaces the whole tag list, which would wipe
-    // a returning contact's earlier tags (including marketing-consent).
-    const { contact } = (await ghl('/contacts/upsert', token, {
-      locationId,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      ...(data.brokerage && { companyName: data.brokerage }),
-      source: 'Advisor website application',
-      customFields: customFieldValues(data),
-    })) as { contact?: { id?: string } }
-
-    if (contact?.id) {
-      // The contact is already saved, so these shouldn't fail the submission
-      const results = await Promise.allSettled([
-        // Adds to the existing tags; "advisor-application" can trigger the follow-up workflow
-        ghl(`/contacts/${contact.id}/tags`, token, { tags }),
-        ghl(`/contacts/${contact.id}/notes`, token, { body: buildNote(data) }),
-      ])
-      for (const result of results) {
-        if (result.status === 'rejected') {
-          console.error('Apply form: follow-up request failed', result.reason)
-        }
-      }
-    }
-
+    await saveApplication(
+      data,
+      { token, locationId, tags: env.GHL_TAGS },
+      'form',
+    )
     return json({ ok: true })
   } catch (error) {
     console.error('Apply form: GoHighLevel request failed', error)

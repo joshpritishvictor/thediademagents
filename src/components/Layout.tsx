@@ -1,8 +1,10 @@
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react'
 import { Suspense, useEffect, useState } from 'react'
 import { useLocation, useOutlet } from 'react-router-dom'
+import { assistant } from '../content/assistant'
 import { easeOutExpo } from '../lib/motion'
 import { preloadRoute } from '../routes'
+import Assistant from './Assistant'
 import Footer from './Footer'
 import Header from './Header'
 
@@ -136,6 +138,7 @@ export default function Layout() {
       </Suspense>
 
       <Footer />
+      {assistant.enabled && <Assistant />}
     </div>
   )
 }

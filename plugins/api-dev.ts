@@ -46,10 +46,16 @@ export default function apiDev(): Plugin {
             if (typeof value === 'string') headers.set(key, value)
           }
           const hasBody = method !== 'GET' && method !== 'HEAD'
+          // Aborts the request when the browser goes away, as Cloudflare does
+          const abort = new AbortController()
+          res.on('close', () => {
+            if (!res.writableFinished) abort.abort()
+          })
           const request = new Request(url, {
             method,
             headers,
             body: hasBody ? await readBody(req) : undefined,
+            signal: abort.signal,
           })
           // Re-read on every request so edits to .env.local apply without a restart.
           // '' prefix = load every variable, not just VITE_*; real env vars win.
@@ -58,7 +64,21 @@ export default function apiDev(): Plugin {
 
           res.statusCode = response.status
           response.headers.forEach((value, key) => res.setHeader(key, value))
-          res.end(Buffer.from(await response.arrayBuffer()))
+          if (!response.body) return res.end()
+          // Pass the body on as it arrives, so streamed responses (the assistant) stream
+          res.flushHeaders()
+          const reader = response.body.getReader()
+          try {
+            for (;;) {
+              const { done, value } = await reader.read()
+              if (done) break
+              res.write(value)
+            }
+          } catch (error) {
+            if (!abort.signal.aborted) throw error
+          } finally {
+            res.end()
+          }
         } catch (error) {
           next(error)
         }
