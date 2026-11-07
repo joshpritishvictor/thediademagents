@@ -349,6 +349,11 @@
     center / 70% no-repeat;
 }
 
+/* "Select…" in the same muted tone as the text placeholders until an option is chosen */
+.select-field:has(option:checked[value='']) {
+  color: color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
 /* Dropdown option list (Chrome and Edge); elsewhere the native list shows */
 @supports (appearance: base-select) {
   .select-field,

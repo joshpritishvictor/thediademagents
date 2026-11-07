@@ -8,6 +8,7 @@
     "prebuild": "node scripts/make-animations.ts",
     "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.ts",
     "animations": "node scripts/make-animations.ts",
+    "ghl:fields": "node scripts/ghl-custom-fields.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
