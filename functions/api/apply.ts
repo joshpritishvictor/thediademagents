@@ -37,6 +37,52 @@ export type Env = {
   GHL_TAGS?: string
 }
 
+/**
+ * Custom contact fields in GoHighLevel, one column per form answer, so applications
+ * can be filtered and reported on. Created once per sub-account with `npm run ghl:fields`
+ * (scripts/ghl-custom-fields.ts); the key is what GoHighLevel derives from the name.
+ */
+export const CUSTOM_FIELDS = {
+  licence: { name: 'Licence status', key: 'licence_status' },
+  experience: { name: 'Years advising', key: 'years_advising' },
+  businessOwnerFocus: {
+    name: 'Business owner clients',
+    key: 'business_owner_clients',
+  },
+  interest: { name: 'Service of interest', key: 'service_of_interest' },
+  preferredContact: {
+    name: 'Preferred contact method',
+    key: 'preferred_contact_method',
+  },
+  intent: { name: 'Application intent', key: 'application_intent' },
+  message: {
+    name: 'Application message',
+    key: 'application_message',
+    long: true,
+  },
+  consent: { name: 'Marketing consent', key: 'marketing_consent' },
+} satisfies Partial<
+  Record<keyof Submission, { name: string; key: string; long?: boolean }>
+>
+
+/** Values for the custom fields above; GoHighLevel matches them by key */
+function customFieldValues(data: Submission) {
+  const values: Record<keyof typeof CUSTOM_FIELDS, string> = {
+    licence: data.licence,
+    experience: data.experience,
+    businessOwnerFocus: data.businessOwnerFocus,
+    interest: data.interest,
+    preferredContact: data.preferredContact,
+    intent: data.intent || 'Application',
+    message: data.message,
+    consent: data.consent ? 'Yes' : 'No',
+  }
+  return (Object.keys(values) as (keyof typeof values)[]).map((field) => ({
+    key: CUSTOM_FIELDS[field].key,
+    field_value: values[field],
+  }))
+}
+
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE = /^[+()\-.\s\d]{7,30}$/
 // Tags come from dropdown answers; only allow plain text so nothing odd reaches the CRM
@@ -151,6 +197,7 @@ export async function POST(request: Request, env: Env) {
       phone: data.phone,
       ...(data.brokerage && { companyName: data.brokerage }),
       source: 'Advisor website application',
+      customFields: customFieldValues(data),
     })) as { contact?: { id?: string } }
 
     if (contact?.id) {

@@ -47,6 +47,10 @@ The application form posts to `/api/apply`, a Cloudflare Pages Function in
 `plugins/api-dev.ts`, reading variables from `.env.local` (see `.env.example`).
 Without `GHL_API_TOKEN` and `GHL_LOCATION_ID` the form shows an error message.
 
+Each submission creates or updates the contact, tags it, adds a note and fills one
+custom field per form answer. Create those fields once per sub-account with
+`npm run ghl:fields` (the token needs the custom-field scopes for that run only).
+
 ## Brand, logo, domain and contact details
 
 All identity values are read from `VITE_*` environment variables at build time,

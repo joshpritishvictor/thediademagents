@@ -83,6 +83,7 @@ export default function ApplyForm() {
           <input
             name="firstName"
             autoComplete="given-name"
+            placeholder="Jordan"
             required
             className="field"
           />
@@ -91,6 +92,7 @@ export default function ApplyForm() {
           <input
             name="lastName"
             autoComplete="family-name"
+            placeholder="Lee"
             required
             className="field"
           />
@@ -100,6 +102,7 @@ export default function ApplyForm() {
             name="email"
             type="email"
             autoComplete="email"
+            placeholder="jordan@yourbrokerage.ca"
             required
             className="field"
           />
@@ -109,6 +112,7 @@ export default function ApplyForm() {
             name="phone"
             type="tel"
             autoComplete="tel"
+            placeholder="(403) 555-0123"
             required
             className="field"
           />
@@ -147,11 +151,11 @@ export default function ApplyForm() {
             options={applyForm.preferredContact}
           />
         </Field>
-        <Field label="Anything you’d like us to know? (optional)" wide>
+        <Field label="Anything you’d like us to know?" wide>
           <textarea
             name="message"
-            rows={3}
-            className="field resize-y"
+            rows={1}
+            className="field-sizing-content min-h-12 field resize-none"
             placeholder={`Your practice, your market, what you’re hoping ${site.shortName} can take off your plate…`}
           />
         </Field>
