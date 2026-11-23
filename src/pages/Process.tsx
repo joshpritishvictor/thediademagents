@@ -80,7 +80,7 @@ function Steps() {
           <em className="accent">to professional meeting.</em>
         </m.h1>
 
-        <div ref={track} className="relative mt-16 lg:mt-20">
+        <div ref={track} className="relative mt-10 lg:mt-12">
           {/* The line between the first and last markers (down the left on small screens) and its gold fill */}
           <div
             ref={lineBox}
