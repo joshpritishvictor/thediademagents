@@ -56,7 +56,7 @@ export default function Services() {
             {pricing.heading[0]}{' '}
             <em className="accent">{pricing.heading[1]}</em>
           </m.h1>
-          <div className="mt-14 lg:mt-16">
+          <div className="mt-8 lg:mt-10">
             <FeePanels delay={0.45} />
           </div>
         </div>
